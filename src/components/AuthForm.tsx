@@ -2,12 +2,15 @@
 
 import { REGISTER_USER, LOGIN_USER } from "@/services/AuthService";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface IAuthFormProps {
   type: "login" | "register";
   className?: string;
 }
 export function AuthForm({ type, className }: IAuthFormProps) {
+  const router = useRouter();
+
   function getFormTitle() {
     switch (type) {
       case "login":
@@ -34,7 +37,9 @@ export function AuthForm({ type, className }: IAuthFormProps) {
 
     const response = await LOGIN_USER({ email, password });
 
-    console.log(response);
+    if (response.success) {
+      router.push("/home")
+    }
   }
 
   async function handleSignUp(event: React.FormEvent<HTMLFormElement>) {
@@ -46,7 +51,18 @@ export function AuthForm({ type, className }: IAuthFormProps) {
 
     const response = await REGISTER_USER({ firstName, lastName, email, password });
 
-    console.log(response);
+    if (response.success) {
+      router.push("/home")
+    }
+  }
+
+  function handleGoogleSSO() {
+    if (type === "login") {
+      window.location.href = "http://localhost:8080/auth/google";
+      return
+    }
+
+    window.location.href = "http://localhost:8080/auth/google";
   }
 
   return (
@@ -86,6 +102,12 @@ export function AuthForm({ type, className }: IAuthFormProps) {
 
         <button type="submit" className="btn btn-primary mt-4">Register</button>
       </form>}
+
+      <div className="oauth-ctas w-full">
+        <button className="btn w-full bg-white text-black mt-4" onClick={handleGoogleSSO}>
+          Log In with Google
+        </button>
+      </div>
 
       <div className="mt-2 text-center link-hover link-secondary">
         {type === 'register' ? <Link href="/login">Already have an account?</Link> : <Link href="/register">Don&apos;t have an account?</Link>}
