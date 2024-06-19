@@ -1,4 +1,4 @@
-import AxiosInstance from "@/config/AxiosUtils";
+import AxiosInstance from "@/config/AxiosService";
 import { AxiosError } from "axios";
 
 export async function LOGIN_USER({ email, password }: any) {
