@@ -40,7 +40,7 @@ export function AuthForm({ type, className }: IAuthFormProps) {
 
     if (response.success) {
       setAuthToken(response.data.token)
-      router.push("/home")
+      router.push("/deck")
     }
   }
 
