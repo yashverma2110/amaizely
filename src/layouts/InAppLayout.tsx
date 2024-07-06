@@ -7,7 +7,7 @@ export default function InAppLayout({
 }>) {
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="h-full flex-1">
+      <div className="min-h-screen max-h-screen overflow-y-auto bg-gray-200 flex-1">
         {children}
       </div>
       <BottomNavigation />
