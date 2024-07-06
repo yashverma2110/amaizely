@@ -1,3 +1,5 @@
+import AuthLayout from "@/layouts/AuthLayouts";
+
 export default function LoginLayout({
   children,
 }: Readonly<{
@@ -6,8 +8,9 @@ export default function LoginLayout({
   return (
     <html lang="en">
       <body className="internal-layout">
-        <div className="blob-bg h-1/2 w-full md:w-3/4 md:scale-150 fixed -top-[20%] -right-[25%]" />
-        {children}
+        <AuthLayout>
+          {children}
+        </AuthLayout>
       </body>
     </html>
   );
