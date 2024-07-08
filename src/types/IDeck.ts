@@ -1,5 +1,5 @@
 export interface IDeck {
-  id: number;
+  _id: number;
   title: string;
   description: string;
   visibility: 'public' | 'private';

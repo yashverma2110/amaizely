@@ -26,7 +26,7 @@ export default async function DeckPage() {
       <section className="deck-list p-4">
         {deckResponse.data?.decks.map((deck: IDeck, index: number) => {
           return (
-            <DeckCard key={deck.id} deck={deck} bgClass={getDeckBgColor(index)} />
+            <DeckCard key={deck._id} deck={deck} bgClass={getDeckBgColor(index)} />
           )
         })}
       </section>
