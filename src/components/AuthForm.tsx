@@ -1,7 +1,6 @@
 'use client';
 
 import { REGISTER_USER, LOGIN_USER } from "@/services/AuthService";
-import { setAuthToken } from "@/utils/AuthUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -39,7 +38,6 @@ export function AuthForm({ type, className }: IAuthFormProps) {
     const response = await LOGIN_USER({ email, password });
 
     if (response.success) {
-      setAuthToken(response.data.token)
       router.push("/deck")
     }
   }
@@ -54,7 +52,6 @@ export function AuthForm({ type, className }: IAuthFormProps) {
     const response = await REGISTER_USER({ firstName, lastName, email, password });
 
     if (response.success) {
-      setAuthToken(response.data.token)
       router.push("/deck")
     }
   }

@@ -12,7 +12,7 @@ export default function BottomNavigation() {
   return (
     <nav
       id="bottom-navigation"
-      className="sticky shadow-shadow-top shadow-gray-200 bottom-0 rounded-3xl p-4 bg-white border-t border-gray-200 grid grid-cols-3"
+      className="sticky shadow-shadow-top shadow-gray-200 bottom-0 rounded-t-3xl p-4 bg-white border-t border-gray-200 grid grid-cols-3"
     >
       <ul>
         <Link href="/deck" className={clsx(["flex justify-center", {

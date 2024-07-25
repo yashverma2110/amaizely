@@ -6,4 +6,10 @@ const AxiosInstance = axios.create({
   withCredentials: true
 })
 
+export function setHeaders(headers: Record<string, string>): void {
+  Object.entries(headers).forEach(([key, value]) => {
+    AxiosInstance.defaults.headers.common[key] = value;
+  });
+}
+
 export default AxiosInstance

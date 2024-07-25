@@ -2,6 +2,7 @@ import clsx from "clsx";
 import type { IDeck } from "@/types/IDeck";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: string }) {
   return (
@@ -16,10 +17,12 @@ export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: str
             </p>
 
             <div className="card-actions justify-end">
-              <button className="btn btn-primary btn-sm">
-                <FontAwesomeIcon icon={faPlay} className="h-4 w-4" />
-                Revise
-              </button>
+              <Link href={`/${deck._id}/revise`}>
+                <button className="btn btn-primary btn-sm">
+                  <FontAwesomeIcon icon={faPlay} className="h-4 w-4" />
+                  Revise
+                </button>
+              </Link>
             </div>
           </div>
         </div>
