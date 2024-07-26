@@ -121,30 +121,32 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
 
   return (
     <form className="youtube-actions w-full flex flex-col md:flex-row gap-2" onSubmit={handleSubmit}>
-      {variant !== 'text' ? (
-        <label className={clsx("w-full shadow-inner input input-bordered flex items-center gap-2", {
-        'input-error': errorMessage
-      })}>
-        <input
-          type="text"
-          name="text-field"
-          className="grow"
-          placeholder="Paste link here"
-          autoComplete="off"
-          onFocus={() => setErrorMessage("")}
-        />
-        <kbd className="kbd kbd-sm">⌘</kbd>
-        <kbd className="kbd kbd-sm">V</kbd>
-      </label>
-      ) : (
-        <textarea
-          placeholder="Paste your text here"
-          name="text-field"
-          className="textarea textarea-bordered textarea-md w-full"
-          onFocus={() => setErrorMessage("")}
-        ></textarea>
-      )}
-      {errorMessage && <p className="text-error">{errorMessage}</p>}
+      <div className="flex flex-col w-full">
+        {variant !== 'text' ? (
+          <label className={clsx("w-full shadow-inner input input-bordered flex items-center gap-2", {
+            'input-error': errorMessage
+          })}>
+            <input
+              type="text"
+              name="text-field"
+              className="grow"
+              placeholder="Paste link here"
+              autoComplete="off"
+              onFocus={() => setErrorMessage("")}
+            />
+            <kbd className="kbd kbd-sm">⌘</kbd>
+            <kbd className="kbd kbd-sm">V</kbd>
+          </label>
+        ) : (
+          <textarea
+            placeholder="Paste your text here"
+            name="text-field"
+            className="textarea textarea-bordered textarea-md w-full"
+            onFocus={() => setErrorMessage("")}
+          ></textarea>
+        )}
+        {errorMessage && <p className="text-error">{errorMessage}</p>}
+      </div>
       <button className="btn btn-primary" type="submit">
         {
           isLoading ? <span>Creating your deck...</span> : <span>Create Deck</span>
