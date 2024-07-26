@@ -55,7 +55,36 @@ export interface IFlashcard {
 }
 export async function GENERATE_FLASHCARDS_FROM_YOUTUBE(videoId: string) {
   try {
-    const response = await AxiosInstance.post(`/flashcards/transcript/${videoId}`, {
+    const response = await AxiosInstance.post(`/flashcards/generate/transcript/${videoId}`, {
+      options: {
+        deckSize: 5,
+      }
+    })
+
+    return {
+      success: true,
+      flashcards: response.data.flashcards as IFlashcard[]
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}
+
+export async function GENERATE_FLASHCARDS_FROM_WEBSITE(website: string) {
+  try {
+    const response = await AxiosInstance.post(`/flashcards/generate/website`, {
+      website,
       options: {
         deckSize: 5,
       }

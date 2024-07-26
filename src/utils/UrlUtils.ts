@@ -14,3 +14,18 @@ export function isValidYouTubeUrl(url: string) {
 
   return youtubeUrlRegex.test(url);
 }
+
+export function isValidWebsiteURL(url: string): boolean {
+  // Regular expression for URL validation
+  const urlPattern = new RegExp(
+    '^(https?:\\/\\/)?' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', // fragment locator
+    'i' // case-insensitive
+  );
+
+  return urlPattern.test(url);
+}

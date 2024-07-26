@@ -12,9 +12,9 @@ export default function DeckTabVariants() {
       <Link role="tab" href="/deck/create/youtube" className={clsx(['tab', {
         'tab-active': pathname === '/deck/create/youtube'
       }])}>YouTube</Link>
-      <Link role="tab" href="/deck/create/pdf" className={clsx(['tab', {
-        'tab-active': pathname === '/deck/create/pdf'
-      }])}>PDF</Link>
+      <Link role="tab" href="/deck/create/website" className={clsx(['tab', {
+        'tab-active': pathname === '/deck/create/website'
+      }])}>Website</Link>
       <Link role="tab" href="/deck/create/doc" className={clsx(['tab', {
         'tab-active': pathname === '/deck/create/doc'
       }])}>Google Doc</Link>

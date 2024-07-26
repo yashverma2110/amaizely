@@ -1,16 +1,9 @@
-import YouTubeDeckCreator from "@/components/DeckCreator/YoutubeCreator"
-import DeckTabVariant from "@/components/DeckCreator/DeckTabVariants"
+import FlashcardDeckCreator from "@/components/DeckCreator/FlashcardDeckCreator"
 
-export default function CreateDeckPage() {
+export default function CreateDeckUsingYoutubePage() {
   return (
-    <div className="create-deck-page">
-      <DeckTabVariant />
-
-      <section className="deck-creator">
-        <div className="flex justify-center p-4">
-          <YouTubeDeckCreator />
-        </div>
-      </section>
+    <div className="create-deck-page flex justify-center p-4">
+      <FlashcardDeckCreator variant="youtube" />
     </div>
   )
 }
