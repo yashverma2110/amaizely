@@ -15,9 +15,9 @@ export default function DeckTabVariants() {
       <Link role="tab" href="/deck/create/website" className={clsx(['tab', {
         'tab-active': pathname === '/deck/create/website'
       }])}>Website</Link>
-      <Link role="tab" href="/deck/create/doc" className={clsx(['tab', {
-        'tab-active': pathname === '/deck/create/doc'
-      }])}>Google Doc</Link>
+      <Link role="tab" href="/deck/create/text" className={clsx(['tab', {
+        'tab-active': pathname === '/deck/create/text'
+      }])}>Text</Link>
     </div>
   )
 }

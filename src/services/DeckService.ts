@@ -109,3 +109,32 @@ export async function GENERATE_FLASHCARDS_FROM_WEBSITE(website: string) {
     }
   }
 }
+
+export async function GENERATE_FLASHCARDS_FROM_TEXT(content: string) {
+  try {
+    const response = await AxiosInstance.post(`/flashcards/generate/text`, {
+      content,
+      options: {
+        deckSize: 5,
+      }
+    })
+
+    return {
+      success: true,
+      flashcards: response.data.flashcards as IFlashcard[]
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}

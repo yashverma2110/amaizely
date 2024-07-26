@@ -1,5 +1,6 @@
 // components/YouTubeForm.tsx
 'use client'
+import { extractAlphanumeric } from '@/utils/StringUtils';
 import { extractYoutubeId, isValidWebsiteURL, isValidYouTubeUrl } from '@/utils/UrlUtils';
 import clsx from 'clsx';
 import { FormEvent, useState } from 'react'
@@ -65,6 +66,34 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
       }
     }
 
+    if (variant === 'text') {
+      if ((content || "").trim() === "") {
+        setErrorMessage("Please enter some text")
+        return {
+          isValid: false,
+          content,
+        };
+      }
+
+      const cleanText = extractAlphanumeric(content);
+
+      if (cleanText.split(" ").length < 100) {
+        setErrorMessage("The text should contain at least 100 words")
+        return {
+          isValid: false,
+          content
+        }
+      }
+
+      if (cleanText.split(" ").length > 1000) {
+        setErrorMessage("The text should contain at max 1000 words")
+        return {
+          isValid: false,
+          content
+        }
+      }
+    }
+
     return {
       isValid: true,
       content
@@ -92,7 +121,8 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
 
   return (
     <form className="youtube-actions w-full flex flex-col md:flex-row gap-2" onSubmit={handleSubmit}>
-      <label className={clsx("w-full shadow-inner input input-bordered flex items-center gap-2", {
+      {variant !== 'text' ? (
+        <label className={clsx("w-full shadow-inner input input-bordered flex items-center gap-2", {
         'input-error': errorMessage
       })}>
         <input
@@ -106,6 +136,14 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
         <kbd className="kbd kbd-sm">⌘</kbd>
         <kbd className="kbd kbd-sm">V</kbd>
       </label>
+      ) : (
+        <textarea
+          placeholder="Paste your text here"
+          name="text-field"
+          className="textarea textarea-bordered textarea-md w-full"
+          onFocus={() => setErrorMessage("")}
+        ></textarea>
+      )}
       {errorMessage && <p className="text-error">{errorMessage}</p>}
       <button className="btn btn-primary" type="submit">
         {

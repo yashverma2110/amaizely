@@ -1,5 +1,5 @@
 "use client"
-import { GENERATE_FLASHCARDS_FROM_WEBSITE, GENERATE_FLASHCARDS_FROM_YOUTUBE, IFlashcard } from "@/services/DeckService"
+import { GENERATE_FLASHCARDS_FROM_TEXT, GENERATE_FLASHCARDS_FROM_WEBSITE, GENERATE_FLASHCARDS_FROM_YOUTUBE, IFlashcard } from "@/services/DeckService"
 import FlashcardForm from './FlashcardForm'
 import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -54,6 +54,16 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
   }
 
+  async function handleDeckCreationWithText(content: string) {
+    setIsLoading(true)
+    const response = await GENERATE_FLASHCARDS_FROM_TEXT(content)
+    setIsLoading(false)
+    if (response.success && response.flashcards) {
+      setFlashcards(response.flashcards)
+      return;
+    }
+  }
+
   async function handleDeckCreation(input: string) {
     switch (variant) {
       case 'youtube':
@@ -61,7 +71,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       case 'website':
         return handleDeckCreationWithWebsite(input)
       case 'text':
-        return
+        return handleDeckCreationWithText(input)
     }
   }
 
