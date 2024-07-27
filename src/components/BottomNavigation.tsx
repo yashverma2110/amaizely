@@ -5,15 +5,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 
-export default function BottomNavigation() {
+export default function BottomNavigation({ className }: { className?: string }) {
   const pathname = usePathname();
 
   function getNavIconClass(path: string) {
     switch (pathname) {
       case path:
-        return "flex flex-col gap-2 items-center justify-center text-primary";
+        return "h-full flex flex-col gap-2 items-center justify-center text-primary";
       default:
-        return "flex flex-col gap-2 items-center justify-center";
+        return "h-full flex flex-col gap-2 items-center justify-center";
     }
   }
 
@@ -29,7 +29,7 @@ export default function BottomNavigation() {
   return (
     <nav
       id="bottom-navigation"
-      className="sticky shadow-shadow-top shadow-gray-200 bottom-0 rounded-t-3xl p-4 bg-white border-t border-gray-200 grid grid-cols-3"
+      className={`overflow-hidden shadow-shadow-top shadow-gray-200 rounded-t-3xl bg-white border-t border-gray-200 grid grid-cols-3 ${className}`}
     >
       <ul>
         <Link href="/deck" className={getNavIconClass("/deck")}>

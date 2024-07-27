@@ -7,12 +7,12 @@ export default function InAppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <AppHeader />
-      <div className="min-h-screen max-h-screen overflow-y-auto bg-gray-200 flex-1">
+    <div className="in-app-layout bg-gray-200 h-screen grid grid-rows-12">
+      <AppHeader className="row-span-1" />
+      <div className="row-span-10 overflow-y-auto shadow-inner">
         {children}
       </div>
-      <BottomNavigation />
+      <BottomNavigation className="row-span-1" />
     </div>
   );
 }

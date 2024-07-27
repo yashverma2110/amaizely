@@ -20,7 +20,7 @@ export default async function RevisePage() {
   }
 
   return (
-    <div className="revision-page">
+    <div className="revision-page h-full">
       <FlashcardContainer flashcards={response.flashcards} />
     </div>
   );

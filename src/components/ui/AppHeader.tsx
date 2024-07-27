@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-export default function AppHeader() {
+export default function AppHeader({ className }: { className: string }) {
   return (
-    <div className="navbar bg-base-100">
+    <div className={`navbar z-50 bg-base-100 shadow-md ${className}`}>
       <div className="flex-none">
         <button className="btn btn-square btn-ghost">
           <svg
