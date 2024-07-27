@@ -17,7 +17,7 @@ export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: str
             </p>
 
             <div className="card-actions mt-4 justify-end">
-              <Link href={`/${deck._id}/revise`}>
+              <Link href={`/revise/${deck._id}`}>
                 <button className="btn btn-primary btn-sm">
                   <FontAwesomeIcon icon={faPlay} className="h-4 w-4" />
                   Revise

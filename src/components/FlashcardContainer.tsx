@@ -1,5 +1,4 @@
 import FlashcardDisplay from "./FlashcardDisplay";
-import RevisionActions from "./RevisionActions";
 import { ScrollHandler } from "./ui/ScrollHandler";
 
 export default function FlashcardContainer({ flashcards }: { flashcards: { _id: string; title: string, content: string }[] }) {

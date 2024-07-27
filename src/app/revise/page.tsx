@@ -1,5 +1,4 @@
 import FlashcardContainer from "@/components/FlashcardContainer";
-import FlashcardDisplay from "@/components/FlashcardDisplay";
 import { setHeaders } from "@/config/AxiosService";
 import { GET_FLASHCARDS_FOR_REVISION } from "@/services/FlashcardService";
 import { cookies } from "next/headers";
