@@ -8,7 +8,7 @@ export default function CreateDeckLayout({
   return (
     <div className="flex flex-col">
       <DeckTabVariants />
-      <section className="deck-creator-container bg-gray-100 shadow-inner h-full">
+      <section className="deck-creator-container shadow-inner h-full">
         {children}
       </section>
     </div>

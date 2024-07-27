@@ -5,3 +5,11 @@ export function extractAlphanumeric(input: string): string {
 
   return matches ? matches.join('') : '';
 }
+
+export function removeHtmlTags(html: string) {
+  // Regular expression to match HTML tags
+  const htmlTagRegex = /<[^>]*>/g;
+
+  // Replace all occurrences of HTML tags with an empty string
+  return html.replace(htmlTagRegex, '');
+}

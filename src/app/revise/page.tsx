@@ -1,3 +1,5 @@
+import FlashcardContainer from "@/components/FlashcardContainer";
+import FlashcardDisplay from "@/components/FlashcardDisplay";
 import { setHeaders } from "@/config/AxiosService";
 import { GET_FLASHCARDS_FOR_REVISION } from "@/services/FlashcardService";
 import { cookies } from "next/headers";
@@ -19,16 +21,7 @@ export default async function RevisePage() {
 
   return (
     <div className="revision-page">
-      <div className="carousel carousel-vertical rounded-box h-[80vh]">
-        {response.flashcards.map((flashcard: any) => (
-          <div key={flashcard._id} className="carousel-item h-full">
-            <div className="shadow-md w-full flex flex-col bg-white gap-4 m-4 p-4">
-              <h1 className="font-semibold text-xl">{flashcard.title}</h1>
-              <p dangerouslySetInnerHTML={{ __html: flashcard.content }}></p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <FlashcardContainer flashcards={response.flashcards} />
     </div>
   );
 }

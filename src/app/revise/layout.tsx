@@ -7,7 +7,7 @@ export default function DeckLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="in-app-layout">
+      <body className="bg-gray-200">
         <InAppLayout>
           {children}
         </InAppLayout>

@@ -2,7 +2,6 @@
 
 import { faCompass, faGear, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 
