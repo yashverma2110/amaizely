@@ -45,7 +45,7 @@ export default function BottomNavigation() {
         </Link>
       </ul>
       <ul>
-        <Link href="/settings" className={getNavIconClass("/revise")}>
+        <Link href="/settings" className={getNavIconClass("/settings")}>
           <FontAwesomeIcon icon={faGear} className="h-5 w-5" />
           <p className={getNavTextClass('/settings')}>Settings</p>
         </Link>
