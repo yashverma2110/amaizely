@@ -3,10 +3,11 @@ import { removeHtmlTags } from "@/utils/StringUtils"
 import { useContext, useEffect, useRef, useState } from "react"
 import { ScrollContext } from "./ui/ScrollHandler"
 import { LOG_VIEW_FOR_FLASHCARD } from "@/services/UserActivityService"
+import debounce from "@/utils/debounce"
 
 export default function FlashcardDisplay({ flashcard, index }: { flashcard: { _id: string, title: string, content: string }, index: number }) {
   const [mounted, setMounted] = useState(false)
-  const { scrollTop } = useContext(ScrollContext)
+  const { scrollTop, clientHeight } = useContext(ScrollContext)
   const cardRef = useRef<HTMLDivElement>(null)
   const timerId = useRef<any>();
 
@@ -14,25 +15,30 @@ export default function FlashcardDisplay({ flashcard, index }: { flashcard: { _i
     setMounted(true)
   }, [])
 
-  useEffect(() => {
-    handleViewLogging()
-  }, [mounted, scrollTop])
+  const logView = async () => {
+    await LOG_VIEW_FOR_FLASHCARD(flashcard._id);
+    timerId.current = null;
+  }
 
-  function handleViewLogging() {
-    if (cardRef.current?.scrollHeight) {
-      const isSelected = Math.ceil(scrollTop / cardRef.current?.scrollHeight) === index;
-      if (isSelected) {
-        timerId.current = setTimeout(() => {
-          LOG_VIEW_FOR_FLASHCARD(flashcard._id);
-          timerId.current = null;
-        }, 2000);
+  useEffect(() => {
+    if (cardRef.current) {
+      const elementTop = cardRef.current.offsetTop;
+      const elementBottom = elementTop + cardRef.current.offsetHeight;
+
+      const containerTop = scrollTop;
+      const containerBottom = containerTop + clientHeight;
+
+      const isInView = elementTop > containerTop && elementTop < containerBottom && elementBottom > containerTop
+
+      if (isInView) {
+        timerId.current = setTimeout(logView, 2000);
       }
 
-      if (!isSelected && timerId.current) {
+      if (!isInView && timerId.current) {
         clearTimeout(timerId.current)
       }
     }
-  }
+  }, [mounted, scrollTop])
 
   if (!mounted) {
     return (
