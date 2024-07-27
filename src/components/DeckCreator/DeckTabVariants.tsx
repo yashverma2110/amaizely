@@ -8,7 +8,7 @@ export default function DeckTabVariants() {
   const pathname = usePathname();
 
   return (
-    <div role="tablist" className="tabs tabs-lg tabs-bordered">
+    <div role="tablist" className="tabs tabs-lg bg-white tabs-bordered">
       <Link role="tab" href="/deck/create/youtube" className={clsx(['tab', {
         'tab-active': pathname === '/deck/create/youtube'
       }])}>YouTube</Link>
