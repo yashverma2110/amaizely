@@ -138,3 +138,35 @@ export async function GENERATE_FLASHCARDS_FROM_TEXT(content: string) {
     }
   }
 }
+
+export async function CREATE_DECK_WITH_FLASHCARDS(payload: {
+  title: string;
+  description: string;
+  flashcards: {
+    topic: string;
+    content: string;
+    order: number;
+  }[]
+}) {
+  try {
+    const response = await AxiosInstance.post("/deck/create", payload)
+
+    return {
+      success: true,
+      data: response.data
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}

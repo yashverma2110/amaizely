@@ -1,5 +1,4 @@
 import DeckTabVariants from "@/components/DeckCreator/DeckTabVariants";
-import InAppLayout from "@/layouts/InAppLayout";
 
 export default function CreateDeckLayout({
   children,
@@ -9,7 +8,7 @@ export default function CreateDeckLayout({
   return (
     <div className="flex flex-col">
       <DeckTabVariants />
-      <section className="deck-creator-container bg-gray-100 shadow-inner h-screen">
+      <section className="deck-creator-container bg-gray-100 shadow-inner h-full">
         {children}
       </section>
     </div>
