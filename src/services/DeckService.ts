@@ -221,3 +221,27 @@ export async function SAVE_DECK_AND_DECK_CARDS_WITH_ID(deckId: string) {
     }
   }
 }
+
+export async function DELETE_DECK_WITH_ID(deckId: string) {
+  try {
+    const response = await AxiosInstance.delete(`/deck/delete/${deckId}`)
+
+    return {
+      success: true,
+      data: response.data
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}
