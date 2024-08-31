@@ -10,28 +10,7 @@ interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text'
 }
 export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps) {
-  const [flashcards, setFlashcards] = useState<IFlashcard[]>([
-    {
-      "topic": "What is Kubernetes?",
-      "content": "<strong>Kubernetes</strong> is a <i>production-grade open-source container orchestration tool</i> developed by Google to manage containerized applications."
-    },
-    {
-      "topic": "Why use Kubernetes?",
-      "content": "Kubernetes supports <strong>microservice architecture</strong> by allowing organizations to <u>independently develop and deploy their applications</u>, facilitating scaling and agility."
-    },
-    {
-      "topic": "Core components of Kubernetes",
-      "content": "<ul><li><strong>Pods</strong>: Smallest unit in K8s, representing a single instance of a running process.</li><li><strong>Services</strong>: Manage communication between various components.</li><li><strong>kubelet</strong>: Node agent for managing pods and containers.</li></ul>"
-    },
-    {
-      "topic": "Compare Master Nodes and Worker Nodes",
-      "content": "<strong>Master Nodes</strong> manage and schedule pods, while <strong>Worker Nodes</strong> perform the actual workload and run applications."
-    },
-    {
-      "topic": "What is kube-proxy?",
-      "content": "<strong>kube-proxy</strong> is a network proxy that runs on each node, implementing network communication rules for accessing pods in the Kubernetes cluster."
-    }
-  ])
+  const [flashcards, setFlashcards] = useState<IFlashcard[]>([])
   const [formErrors, setFormErrors] = useState<Record<'deck-name' | 'deck-description', string>>({
     'deck-name': '',
     'deck-description': ''
