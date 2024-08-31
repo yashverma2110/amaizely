@@ -3,7 +3,6 @@ import { removeHtmlTags } from "@/utils/StringUtils"
 import { useContext, useEffect, useRef, useState } from "react"
 import { ScrollContext } from "./ui/ScrollHandler"
 import { LOG_VIEW_FOR_FLASHCARD } from "@/services/UserActivityService"
-import debounce from "@/utils/debounce"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
 

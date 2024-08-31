@@ -142,6 +142,7 @@ export async function GENERATE_FLASHCARDS_FROM_TEXT(content: string) {
 export async function CREATE_DECK_WITH_FLASHCARDS(payload: {
   title: string;
   description: string;
+  visibility?: 'public' | 'private',
   flashcards: {
     topic: string;
     content: string;
@@ -174,6 +175,31 @@ export async function CREATE_DECK_WITH_FLASHCARDS(payload: {
 export async function GET_DECK_AND_DECK_CARDS_WITH_ID(deckId: string) {
   try {
     const response = await AxiosInstance.get(`/deck/${deckId}`)
+
+    return {
+      success: true,
+      deck: response.data.deck,
+      flashcards: response.data.flashcards
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}
+
+export async function SAVE_DECK_AND_DECK_CARDS_WITH_ID(deckId: string) {
+  try {
+    const response = await AxiosInstance.post(`/deck/${deckId}/save`)
 
     return {
       success: true,

@@ -2,13 +2,14 @@
 
 import { REGISTER_USER, LOGIN_USER } from "@/services/AuthService";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface IAuthFormProps {
   type: "login" | "register";
   className?: string;
 }
 export function AuthForm({ type, className }: IAuthFormProps) {
+  const query = useSearchParams();
   const router = useRouter();
 
   function getFormTitle() {
@@ -38,6 +39,11 @@ export function AuthForm({ type, className }: IAuthFormProps) {
     const response = await LOGIN_USER({ email, password });
 
     if (response.success) {
+      if (query.get("redirect")) {
+        router.push(query.get("redirect") as string);
+        return;
+      }
+
       router.push("/deck")
     }
   }

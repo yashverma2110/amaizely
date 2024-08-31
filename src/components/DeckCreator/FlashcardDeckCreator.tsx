@@ -10,7 +10,28 @@ interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text'
 }
 export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps) {
-  const [flashcards, setFlashcards] = useState<IFlashcard[]>([])
+  const [flashcards, setFlashcards] = useState<IFlashcard[]>([
+    {
+      "topic": "What is Kubernetes?",
+      "content": "<strong>Kubernetes</strong> is a <i>production-grade open-source container orchestration tool</i> developed by Google to manage containerized applications."
+    },
+    {
+      "topic": "Why use Kubernetes?",
+      "content": "Kubernetes supports <strong>microservice architecture</strong> by allowing organizations to <u>independently develop and deploy their applications</u>, facilitating scaling and agility."
+    },
+    {
+      "topic": "Core components of Kubernetes",
+      "content": "<ul><li><strong>Pods</strong>: Smallest unit in K8s, representing a single instance of a running process.</li><li><strong>Services</strong>: Manage communication between various components.</li><li><strong>kubelet</strong>: Node agent for managing pods and containers.</li></ul>"
+    },
+    {
+      "topic": "Compare Master Nodes and Worker Nodes",
+      "content": "<strong>Master Nodes</strong> manage and schedule pods, while <strong>Worker Nodes</strong> perform the actual workload and run applications."
+    },
+    {
+      "topic": "What is kube-proxy?",
+      "content": "<strong>kube-proxy</strong> is a network proxy that runs on each node, implementing network communication rules for accessing pods in the Kubernetes cluster."
+    }
+  ])
   const [formErrors, setFormErrors] = useState<Record<'deck-name' | 'deck-description', string>>({
     'deck-name': '',
     'deck-description': ''
@@ -93,6 +114,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     const formData = new FormData(event.currentTarget)
     const deckName = formData.get('deck-name') as string
     const deckDescription = formData.get('deck-description') as string
+    const deckVisibility = formData.get('deck-visibility') as 'on' | 'off'
 
     if (!deckName || deckName.trim() === '') {
       setFormErrors({
@@ -120,7 +142,8 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     const response = await CREATE_DECK_WITH_FLASHCARDS({
       title: deckName,
       description: deckDescription,
-      flashcards: flashcardsToSave
+      flashcards: flashcardsToSave,
+      visibility: deckVisibility === 'on' ? 'public' : 'private',
     })
     setIsDeckSaving(false)
 
@@ -190,6 +213,13 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
               <textarea className="textarea textarea-bordered h-24" name="deck-description" placeholder="Bio"></textarea>
             </label>
             {formErrors['deck-description'] && <p className="text-red-500 text-sm mt-1">{formErrors['deck-description']}</p>}
+
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">Public</span>
+                <input type="checkbox" name="deck-visibility" className="toggle" defaultChecked />
+              </label>
+            </div>
 
             <div className="form-actions my-4 flex justify-end gap-2">
               <button className="btn btn-active btn-neutral" disabled={isDeckSaving}>Cancel</button>
