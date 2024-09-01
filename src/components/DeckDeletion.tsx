@@ -19,6 +19,8 @@ export default function DeckDeletion({ deckId, deckName }: { deckId: string, dec
     setIsDeleting(false);
 
     deckDeletionModal.current?.close();
+
+    window.location.reload();
   }
 
   return (
