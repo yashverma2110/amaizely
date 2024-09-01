@@ -52,6 +52,7 @@ export async function GET_DECK_AND_DECK_CARDS(deckId: string) {
 export interface IFlashcard {
   topic: string;
   content: string;
+  hidden?: boolean;
 }
 export async function GENERATE_FLASHCARDS_FROM_YOUTUBE(videoId: string) {
   try {

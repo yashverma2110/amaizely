@@ -1,10 +1,12 @@
 "use client"
 import { CREATE_DECK_WITH_FLASHCARDS, GENERATE_FLASHCARDS_FROM_TEXT, GENERATE_FLASHCARDS_FROM_WEBSITE, GENERATE_FLASHCARDS_FROM_YOUTUBE, IFlashcard } from "@/services/DeckService"
 import FlashcardForm from './FlashcardForm'
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { GET_USER } from "@/services/AuthService"
 
 interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text'
@@ -15,12 +17,23 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     'deck-name': '',
     'deck-description': ''
   })
+  const [isPageLoading, setIsPageLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [isDeckSaving, setIsDeckSaving] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const saveDeckModalRef = useRef<HTMLDialogElement>(null)
 
   const router = useRouter()
+
+  useEffect(() => {
+    GET_USER().then((response) => {
+      if (response.success) {
+        setIsAuthenticated(true)
+        setIsPageLoading(false)
+      }
+    })
+  }, [])
 
   function getCardTitle() {
     switch (variant) {
@@ -131,6 +144,15 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
   }
 
+  if (isPageLoading) {
+    return <div className="page-loading-section h-screen w-full grid grid-rows-12 gap-4 my-2">
+      <div className="skeleton bg-gray-300 row-span-3 w-full drop-shadow"></div>
+      <div className="skeleton bg-gray-300 row-span-1 w-full drop-shadow"></div>
+      <div className="skeleton bg-gray-300 row-span-2 w-full drop-shadow"></div>
+      <div className="skeleton bg-gray-300 row-span-2 w-full drop-shadow"></div>
+    </div>
+  }
+
   return (
     <div className="youtube-creator w-full flex flex-col gap-4">
       <div className="card border w-full bg-base-100 shadow-xl">
@@ -143,11 +165,11 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
 
       {isLoading && (
         <section className="loading-section h-[1000px] md:h-[500px] grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
-          <div className="skeleton h-full w-full"></div>
-          <div className="skeleton h-full w-full"></div>
-          <div className="skeleton h-full w-full"></div>
-          <div className="skeleton h-full w-full"></div>
-          <div className="skeleton h-full w-full"></div>
+          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
+          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
+          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
+          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
+          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
         </section>
       )}
 
@@ -155,14 +177,21 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
         flashcards.length > 0 && (
           <section className="flashcards-container space-y-4">
             <div className="flashcards-toolbar px-4">
+              {isAuthenticated ? 
               <button className="btn btn-warning w-full md:w-auto" onClick={() => saveDeckModalRef.current?.showModal()}>
                 <FontAwesomeIcon icon={faFloppyDisk} className="h-5 w-5" />
-                Save as Deck
+                  {isAuthenticated ? 'Save' : 'Login to save'}
               </button>
+                :
+                <Link href="/login" className="btn btn-warning w-full md:w-auto">
+                  <FontAwesomeIcon icon={faFloppyDisk} className="h-5 w-5" />
+                  Login to save
+                </Link>
+              }
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {flashcards.map(flashcard => (
-                <div key={flashcard.topic} className="card bg-base-100 w-full shadow-xl">
+                <div key={flashcard.topic} className={`card bg-base-100 w-full shadow-xl ${flashcard.hidden ? 'blur' : ''}`}>
                   <div className="card-body">
                     <h2 className="card-title">{flashcard.topic}</h2>
                     <p dangerouslySetInnerHTML={{ __html: flashcard.content }}></p>
@@ -201,7 +230,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
             </div>
 
             <div className="form-actions my-4 flex justify-end gap-2">
-              <button className="btn btn-active btn-neutral" disabled={isDeckSaving}>Cancel</button>
+              <button className="btn btn-active btn-neutral" disabled={isDeckSaving} onClick={() => saveDeckModalRef.current?.close()}>Cancel</button>
               <button type="submit" className="btn btn-active btn-primary">{isDeckSaving ? 'Saving...' : 'Save'}</button>
             </div>
           </form>
