@@ -109,11 +109,11 @@ export function AuthForm({ type, className }: IAuthFormProps) {
         <button type="submit" className="btn btn-primary mt-4">Register</button>
       </form>}
 
-      <div className="oauth-ctas w-full">
+      {/* <div className="oauth-ctas w-full">
         <button className="btn w-full bg-white text-black mt-4" onClick={handleGoogleSSO}>
           Log In with Google
         </button>
-      </div>
+      </div> */}
 
       <div className="mt-2 text-center link-hover link-secondary">
         {type === 'register' ? <Link href="/login">Already have an account?</Link> : <Link href="/register">Don&apos;t have an account?</Link>}

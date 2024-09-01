@@ -28,10 +28,12 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
 
   useEffect(() => {
     GET_USER().then((response) => {
+      setIsPageLoading(false)
       if (response.success) {
         setIsAuthenticated(true)
-        setIsPageLoading(false)
       }
+    }).catch(() => {
+      setIsPageLoading(false)
     })
   }, [])
 
