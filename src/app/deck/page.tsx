@@ -32,8 +32,6 @@ export default async function DeckPage() {
             Create Deck
           </button>
         </Link>
-
-        {authSid}
       </section>
 
       {!deckResponse && (
