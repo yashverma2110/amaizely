@@ -1,5 +1,5 @@
 enum BaseUrl {
-  PROD = "http://54.224.228.27",
+  PROD = "https://service.amaizely.com",
   DEV = "http://localhost:8080"
 }
 
