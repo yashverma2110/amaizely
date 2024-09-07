@@ -43,7 +43,7 @@ export default async function DeckPage() {
         </section>
       )}
 
-      <section className="deck-list grid grid-cols-1 gap-6 p-4">
+      <section className="deck-list grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
         {deckResponse.data?.decks.map((deck: IDeck, index: number) => {
           return (
             <DeckCard key={deck._id} deck={deck} bgClass={getDeckBgColor(index)} />
