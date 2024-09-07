@@ -1,30 +1,24 @@
 "use client"
-import { CREATE_DECK_WITH_FLASHCARDS, GENERATE_FLASHCARDS_FROM_TEXT, GENERATE_FLASHCARDS_FROM_WEBSITE, GENERATE_FLASHCARDS_FROM_YOUTUBE, IFlashcard } from "@/services/DeckService"
+import { GENERATE_FLASHCARDS_FROM_TEXT, GENERATE_FLASHCARDS_FROM_WEBSITE, GENERATE_FLASHCARDS_FROM_YOUTUBE, IFlashcard } from "@/services/DeckService"
 import FlashcardForm from './FlashcardForm'
 import { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { GET_USER } from "@/services/AuthService"
+import SaveDeckForm from "../SaveDeckForm"
 
 interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text'
 }
 export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps) {
   const [flashcards, setFlashcards] = useState<IFlashcard[]>([])
-  const [formErrors, setFormErrors] = useState<Record<'deck-name' | 'deck-description', string>>({
-    'deck-name': '',
-    'deck-description': ''
-  })
+
   const [isPageLoading, setIsPageLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
-  const [isDeckSaving, setIsDeckSaving] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const saveDeckModalRef = useRef<HTMLDialogElement>(null)
-
-  const router = useRouter()
 
   useEffect(() => {
     GET_USER().then((response) => {
@@ -100,52 +94,6 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
   }
 
-  async function saveFlashcardsInDeck(event: React.FormEvent<HTMLFormElement>) {
-    if (isDeckSaving) {
-      return;
-    }
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const deckName = formData.get('deck-name') as string
-    const deckDescription = formData.get('deck-description') as string
-    const deckVisibility = formData.get('deck-visibility') as 'on' | 'off'
-
-    if (!deckName || deckName.trim() === '') {
-      setFormErrors({
-        'deck-name': 'Deck name is required',
-        'deck-description': ''
-      })
-      return;
-    }
-
-    if (!deckDescription || deckDescription.trim() === '') {
-      setFormErrors({
-        'deck-name': '',
-        'deck-description': 'Deck description is required'
-      })
-      return;
-    }
-
-    const flashcardsToSave = flashcards.map((flashcard, index) => ({
-      topic: flashcard.topic,
-      content: flashcard.content,
-      order: index,
-    }))
-
-    setIsDeckSaving(true)
-    const response = await CREATE_DECK_WITH_FLASHCARDS({
-      title: deckName,
-      description: deckDescription,
-      flashcards: flashcardsToSave,
-      visibility: deckVisibility === 'on' ? 'public' : 'private',
-    })
-    setIsDeckSaving(false)
-
-    if (response.success) {
-      router.push('/deck');
-    }
-  }
-
   if (isPageLoading) {
     return <div className="page-loading-section h-screen w-full grid grid-rows-12 gap-4 my-2">
       <div className="skeleton bg-gray-300 row-span-3 w-full drop-shadow"></div>
@@ -206,37 +154,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       }
 
       <dialog id="save-deck-modal" ref={saveDeckModalRef} className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Save your flashcards in a deck</h3>
-          <form onSubmit={saveFlashcardsInDeck}>
-            <label className="form-control w-full">
-              <div className="label">
-                <span className="label-text">Name</span>
-              </div>
-              <input type="text" name="deck-name" autoComplete="off" placeholder="Type here" className="input input-bordered w-full" />
-            </label>
-            {formErrors['deck-name'] && <p className="text-red-500 text-sm mt-1">{formErrors['deck-name']}</p>}
-            <label className="form-control">
-              <div className="label">
-                <span className="label-text">Description</span>
-              </div>
-              <textarea className="textarea textarea-bordered h-24" name="deck-description" placeholder="Bio"></textarea>
-            </label>
-            {formErrors['deck-description'] && <p className="text-red-500 text-sm mt-1">{formErrors['deck-description']}</p>}
-
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text">Public</span>
-                <input type="checkbox" name="deck-visibility" className="toggle" defaultChecked />
-              </label>
-            </div>
-
-            <div className="form-actions my-4 flex justify-end gap-2">
-              <button className="btn btn-active btn-neutral" disabled={isDeckSaving} onClick={() => saveDeckModalRef.current?.close()}>Cancel</button>
-              <button type="submit" className="btn btn-active btn-primary">{isDeckSaving ? 'Saving...' : 'Save'}</button>
-            </div>
-          </form>
-        </div>
+        <SaveDeckForm flashcards={flashcards} onCancel={() => saveDeckModalRef.current?.close()} />
       </dialog>
     </div>
   )

@@ -59,7 +59,7 @@ export default function FlashcardDisplay({ flashcard, index }: { flashcard: { _i
   return (
     <div ref={cardRef} className="carousel-item h-full">
       <div className="relative shadow-md w-full flex flex-col bg-white gap-4 m-4 p-4">
-        <h1 className="font-semibold text-xl">{flashcard.title}</h1>
+        <h1 className="font-semibold text-xl" dangerouslySetInnerHTML={{ __html: flashcard.title }}></h1>
         <p dangerouslySetInnerHTML={{ __html: flashcard.content }}></p>
         {showOnboarding && (
           <div className="absolute rotate-90 right-0 bottom-10 flex items-center gap-2 bg-blue-300 text-white font-semibold px-4 rounded-l-full">
