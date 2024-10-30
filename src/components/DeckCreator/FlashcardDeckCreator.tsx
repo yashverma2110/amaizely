@@ -144,7 +144,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
                 <div key={flashcard.title} className={`card bg-base-100 w-full shadow-xl ${flashcard.hidden ? 'blur' : ''}`}>
                   <div className="card-body">
                     <h2 className="card-title">{flashcard.title}</h2>
-                    <p dangerouslySetInnerHTML={{ __html: flashcard.content }}></p>
+                    <p className="rich-content" dangerouslySetInnerHTML={{ __html: flashcard.content }}></p>
                   </div>
                 </div>
               ))}

@@ -5,8 +5,12 @@ import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import CharacterCount from '@tiptap/extension-character-count'
 import Underline from '@tiptap/extension-underline'
-import { faBold, faItalic, faUnderline } from '@fortawesome/free-solid-svg-icons'
+import { faBold, faCode, faItalic, faList, faUnderline, faListNumeric } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import OrderedList from '@tiptap/extension-ordered-list'
+import ListItem from '@tiptap/extension-list-item'
+import BulletList from '@tiptap/extension-bullet-list'
+import Code from '@tiptap/extension-code'
 
 interface IRichTextEditorProps {
   value?: string,
@@ -25,7 +29,11 @@ const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpd
       Placeholder.configure({ placeholder }),
       CharacterCount.configure({
         limit,
-      })
+      }),
+      BulletList,
+      OrderedList,
+      ListItem,
+      Code,
     ],
     immediatelyRender: false,
     content: value,
@@ -49,7 +57,10 @@ const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpd
   const toolbarButtons = [
     { icon: faBold, onClick: toggleBold, isActive: editor?.isActive('bold') },
     { icon: faItalic, onClick: toggleItalic, isActive: editor?.isActive('italic') },
-    { icon: faUnderline, onClick: toggleUnderline, isActive: editor?.isActive('underline') }
+    { icon: faUnderline, onClick: toggleUnderline, isActive: editor?.isActive('underline') },
+    { icon: faCode, onClick: toggleCode, isActive: editor?.isActive('code') },
+    { icon: faListNumeric, onClick: toggleOrderedList, isActive: editor?.isActive('orderedList') },
+    { icon: faList, onClick: toggleBulletList, isActive: editor?.isActive('bulletList') }
   ]
 
   function isCharacterLimitAlmostReached() {
@@ -76,6 +87,18 @@ const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpd
 
   function toggleUnderline() {
     editor?.chain().focus().toggleUnderline().run()
+  }
+
+  function toggleCode() {
+    editor?.chain().focus().toggleCode().run()
+  }
+
+  function toggleOrderedList() {
+    editor?.chain().focus().toggleOrderedList().run()
+  }
+
+  function toggleBulletList() {
+    editor?.chain().focus().toggleBulletList().run()
   }
 
   return (
