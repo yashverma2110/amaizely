@@ -1,8 +1,9 @@
 import axios from "axios"
 import BaseUrl from "@/constants/BaseUrl"
+import { isProduction } from "@/utils/EnvUtils";
 
 const AxiosInstance = axios.create({
-  baseURL: process.env.NODE_ENV === "development" ? BaseUrl.DEV : BaseUrl.PROD,
+  baseURL: isProduction() ? BaseUrl.DEV : BaseUrl.PROD,
   withCredentials: true
 })
 

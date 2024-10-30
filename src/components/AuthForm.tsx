@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { REGISTER_USER, LOGIN_USER } from "@/services/AuthService";
 import GoogleIcon from "@/components/ui/GoogleIcon";
+import { isProduction } from "@/utils/EnvUtils";
+import BaseUrl from "@/constants/BaseUrl";
 
 interface IAuthFormProps {
   type: "login" | "register";
@@ -64,13 +66,14 @@ export function AuthForm({ type, className }: IAuthFormProps) {
   }
 
   function handleGoogleSSO() {
+    const BASE_URL = isProduction() ? BaseUrl.PROD : BaseUrl.DEV
     const redirect = `${window.location.protocol}//${window.location.host}/deck`;
     if (type === "login") {
-      window.location.href = `http://localhost:8080/auth/google?redirect=${redirect}`;
+      window.location.href = `${BASE_URL}/auth/google?redirect=${redirect}`;
       return
     }
 
-    window.location.href = `http://localhost:8080/auth/google?redirect=${redirect}`;
+    window.location.href = `${BASE_URL}/auth/google?redirect=${redirect}`;
   }
 
   return (
