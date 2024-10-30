@@ -1,8 +1,9 @@
 'use client';
 
-import { REGISTER_USER, LOGIN_USER } from "@/services/AuthService";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { REGISTER_USER, LOGIN_USER } from "@/services/AuthService";
+import GoogleIcon from "@/components/ui/GoogleIcon";
 
 interface IAuthFormProps {
   type: "login" | "register";
@@ -63,12 +64,13 @@ export function AuthForm({ type, className }: IAuthFormProps) {
   }
 
   function handleGoogleSSO() {
+    const redirect = `${window.location.protocol}//${window.location.host}/deck`;
     if (type === "login") {
-      window.location.href = "http://localhost:8080/auth/google";
+      window.location.href = `http://localhost:8080/auth/google?redirect=${redirect}`;
       return
     }
 
-    window.location.href = "http://localhost:8080/auth/google";
+    window.location.href = `http://localhost:8080/auth/google?redirect=${redirect}`;
   }
 
   return (
@@ -90,11 +92,11 @@ export function AuthForm({ type, className }: IAuthFormProps) {
 
       {type === 'register' && <form className="w-full flex flex-col gap-2" onSubmit={handleFormSubmit}>
         <label className="input input-bordered flex items-center gap-4">
-          First Name
+          <span className="whitespace-nowrap">First Name</span>
           <input name="firstName" type="text" className="grow" placeholder="Son" />
         </label>
         <label className="input input-bordered flex items-center gap-4">
-          Last Name
+          <span className="whitespace-nowrap">Last Name</span>
           <input name="lastName" type="text" className="grow" placeholder="Goku" />
         </label>
         <label className="input input-bordered flex items-center gap-4">
@@ -109,11 +111,12 @@ export function AuthForm({ type, className }: IAuthFormProps) {
         <button type="submit" className="btn btn-primary mt-4">Register</button>
       </form>}
 
-      {/* <div className="oauth-ctas w-full">
-        <button className="btn w-full bg-white text-black mt-4" onClick={handleGoogleSSO}>
-          Log In with Google
+      <div className="oauth-ctas w-full mt-4">
+        <button className="flex items-center justify-center font-medium rounded text-sm border border-neutral-500 gap-2.5 py-2.5 px-3 w-full bg-white text-black" onClick={handleGoogleSSO}>
+          <GoogleIcon size="xs" />
+          Sign in with Google
         </button>
-      </div> */}
+      </div>
 
       <div className="mt-2 text-center link-hover link-secondary">
         {type === 'register' ? <Link href="/login">Already have an account?</Link> : <Link href="/register">Don&apos;t have an account?</Link>}
