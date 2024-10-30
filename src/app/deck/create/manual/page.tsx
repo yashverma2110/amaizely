@@ -42,7 +42,7 @@ export default function CreateDeckUsingManualPage() {
           Add flashcard
         </button>
 
-        {flashcards.map((flashcard, index) => (
+        {/* {flashcards.map((flashcard, index) => (
           <div key={index} ref={el => cardRefs.current[index] = el as HTMLDivElement} className="card bg-base-100 shadow-xl">
             <div className="card-body">
               <h2><RichTextEditor value={flashcard.topic} placeholder="Flashcard title" onUpdate={value => updateFlashcard(index, value, "topic")} /></h2>
@@ -51,7 +51,7 @@ export default function CreateDeckUsingManualPage() {
               </div>
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
 
       <dialog id="save-deck-modal" ref={saveDeckModalRef} className="modal modal-bottom sm:modal-middle">
