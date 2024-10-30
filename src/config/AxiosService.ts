@@ -3,7 +3,7 @@ import BaseUrl from "@/constants/BaseUrl"
 import { isProduction } from "@/utils/EnvUtils";
 
 const AxiosInstance = axios.create({
-  baseURL: isProduction() ? BaseUrl.DEV : BaseUrl.PROD,
+  baseURL: isProduction() ? BaseUrl.PROD : BaseUrl.DEV,
   withCredentials: true
 })
 
