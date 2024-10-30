@@ -27,7 +27,7 @@ export default function AlertsManager({ alerts }: { alerts: IAlert[] }) {
   return (
     <div className="flex flex-col gap-2">
       {alerts.map((alert) => (
-        <div role="alert" className={`alert alert-${alert.type}`}>
+        <div role="alert" className={`alert alert-${alert.type}`} key={alert.message}>
           <FontAwesomeIcon icon={getIconForAlertType(alert.type)} />
           <span>{alert.message}</span>
         </div>
