@@ -3,6 +3,7 @@ export interface IDeck {
   title: string;
   description: string;
   visibility: 'public' | 'private';
+  isDraft?: boolean;
   createdBy: string;
   createdAt: Date;
   updatedAt: Date;

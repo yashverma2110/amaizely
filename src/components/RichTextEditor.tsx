@@ -3,19 +3,68 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
+import CharacterCount from '@tiptap/extension-character-count'
 import Underline from '@tiptap/extension-underline'
 import { faBold, faItalic, faUnderline } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const RichTextEditor = ({ value, placeholder, onUpdate }: { value?: string, placeholder?: string, onUpdate: (value: string) => void }) => {
+interface IRichTextEditorProps {
+  value?: string,
+  placeholder?: string,
+  size?: "sm" | "md" | "lg",
+  message?: string,
+  limit?: number,
+  onUpdate: (value: string) => void
+}
+
+const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpdate }: IRichTextEditorProps) => {
   const editor = useEditor({
-    extensions: [StarterKit, Underline, Placeholder.configure({ placeholder })],
+    extensions: [
+      StarterKit,
+      Underline,
+      Placeholder.configure({ placeholder }),
+      CharacterCount.configure({
+        limit,
+      })
+    ],
     immediatelyRender: false,
     content: value,
+    editorProps: { attributes: { class: 'focus:outline-none p-2 text-sm md:text-base' } },
     onUpdate: ({ editor }) => {
       onUpdate(editor.getHTML())
     }
   })
+
+  function getHeight() {
+    switch (size) {
+      case "sm":
+        return "h-24 max-h-24"
+      case "md":
+        return "h-48 max-h-48"
+      default:
+        return "h-96 max-h-96"
+    }
+  }
+
+  const toolbarButtons = [
+    { icon: faBold, onClick: toggleBold, isActive: editor?.isActive('bold') },
+    { icon: faItalic, onClick: toggleItalic, isActive: editor?.isActive('italic') },
+    { icon: faUnderline, onClick: toggleUnderline, isActive: editor?.isActive('underline') }
+  ]
+
+  function isCharacterLimitAlmostReached() {
+    if (!limit) return false;
+
+    return editor?.storage.characterCount.characters() > limit - 30;
+  }
+
+  function getBorderRadius() {
+    if (isCharacterLimitAlmostReached()) {
+      return "rounded-t-lg"
+    };
+
+    return "rounded-lg";
+  }
 
   function toggleBold() {
     editor?.chain().focus().toggleBold().run()
@@ -30,14 +79,26 @@ const RichTextEditor = ({ value, placeholder, onUpdate }: { value?: string, plac
   }
 
   return (
-    <div className="h-full w-full shadow-inner rounded-lg">
-      <div className="flex">
-        <button className="p-2" onClick={toggleBold}><FontAwesomeIcon icon={faBold} /></button>
-        <button className="p-2" onClick={toggleItalic}><FontAwesomeIcon icon={faItalic} /></button>
-        <button className="p-2" onClick={toggleUnderline}><FontAwesomeIcon icon={faUnderline} /></button>
+    <div className="flex flex-col">
+      <div className={`w-full flex flex-col relative overflow-hidden border border-neutral-300 ${getBorderRadius()} ${getHeight()}`}>
+        <div className="font-toolbar sticky top-0 z-10 border-b border-neutral-300 flex items-center gap-1 bg-white">
+          {toolbarButtons.map((button, index) => (
+            <button
+              key={index}
+              className={`btn btn-square btn-sm btn-ghost md:btn-md rounded-none ${button.isActive ? 'btn-active' : ''}`}
+              onClick={button.onClick}
+            >
+              <FontAwesomeIcon icon={button.icon} />
+            </button>
+          ))}
       </div>
-      <div className="px-2 pb-2">
+        <section className="flex-1 shadow-inner overflow-y-auto">
         <EditorContent editor={editor} />
+        </section>
+      </div>
+      <div className={`flex items-center justify-between text-xs px-1 h-4`}>
+        <span className="text-error">{message}</span>
+        {isCharacterLimitAlmostReached() && <span>{(limit ?? 0) - editor?.storage.characterCount.characters()} characters left</span>}
       </div>
     </div>
   )

@@ -141,9 +141,9 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {flashcards.map(flashcard => (
-                <div key={flashcard.topic} className={`card bg-base-100 w-full shadow-xl ${flashcard.hidden ? 'blur' : ''}`}>
+                <div key={flashcard.title} className={`card bg-base-100 w-full shadow-xl ${flashcard.hidden ? 'blur' : ''}`}>
                   <div className="card-body">
-                    <h2 className="card-title">{flashcard.topic}</h2>
+                    <h2 className="card-title">{flashcard.title}</h2>
                     <p dangerouslySetInnerHTML={{ __html: flashcard.content }}></p>
                   </div>
                 </div>
@@ -154,7 +154,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       }
 
       <dialog id="save-deck-modal" ref={saveDeckModalRef} className="modal modal-bottom sm:modal-middle">
-        <SaveDeckForm flashcards={flashcards} onCancel={() => saveDeckModalRef.current?.close()} />
+        <SaveDeckForm mode="create" flashcards={flashcards} onCancel={() => saveDeckModalRef.current?.close()} />
       </dialog>
     </div>
   )

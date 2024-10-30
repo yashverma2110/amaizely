@@ -1,9 +1,18 @@
 "use client"
-import { CREATE_DECK_WITH_FLASHCARDS, IFlashcard } from "@/services/DeckService";
-import { useRouter } from "next/navigation";
 import { useState } from "react"
+import { useRouter } from "next/navigation";
+import { IDeck } from "@/types/IDeck";
+import { CREATE_DECK_WITH_FLASHCARDS, IFlashcard, UPDATE_DECK_AND_DECK_CARDS_BY_ID } from "@/services/DeckService";
 
-export default function SaveDeckForm({ flashcards, onCancel }: { flashcards: IFlashcard[], onCancel: () => void }) {
+interface ISaveDeckFormProps {
+  flashcards: IFlashcard[];
+  deck?: IDeck;
+  mode: "create" | "edit";
+  onSave?: () => void;
+  onCancel: () => void;
+}
+
+export default function SaveDeckForm({ flashcards, deck, mode, onSave, onCancel }: ISaveDeckFormProps) {
   const [formErrors, setFormErrors] = useState<Record<'deck-name' | 'deck-description', string>>({
     'deck-name': '',
     'deck-description': ''
@@ -11,6 +20,27 @@ export default function SaveDeckForm({ flashcards, onCancel }: { flashcards: IFl
   const [isDeckSaving, setIsDeckSaving] = useState(false)
 
   const router = useRouter()
+
+  function shouldSaveAsDraft() {
+    return flashcards.length < 4
+  }
+
+  function getFlashcardProps(flashcard: IFlashcard, index: number) {
+    if (mode === 'edit') {
+      return {
+        _id: flashcard._id,
+        title: flashcard.title,
+        content: flashcard.content,
+        order: index,
+      }
+    }
+
+    return {
+      title: flashcard.title,
+      content: flashcard.content,
+      order: index,
+    }
+  }
 
   async function saveFlashcardsInDeck(event: React.FormEvent<HTMLFormElement>) {
     if (isDeckSaving) {
@@ -38,43 +68,60 @@ export default function SaveDeckForm({ flashcards, onCancel }: { flashcards: IFl
       return;
     }
 
-    const flashcardsToSave = flashcards.map((flashcard, index) => ({
-      topic: flashcard.topic,
-      content: flashcard.content,
-      order: index,
-    }))
+    const flashcardsToSave = flashcards.map((flashcard, index) => getFlashcardProps(flashcard, index))
 
     setIsDeckSaving(true)
-    const response = await CREATE_DECK_WITH_FLASHCARDS({
-      title: deckName,
-      description: deckDescription,
-      flashcards: flashcardsToSave,
-      visibility: deckVisibility === 'on' ? 'public' : 'private',
-    })
-    setIsDeckSaving(false)
 
-    if (response.success) {
-      router.push('/deck');
+    if (mode === "create") {
+      const response = await CREATE_DECK_WITH_FLASHCARDS({
+        title: deckName,
+        description: deckDescription,
+        flashcards: flashcardsToSave,
+        visibility: deckVisibility === 'on' ? 'public' : 'private',
+        isDraft: shouldSaveAsDraft()
+      })
+      setIsDeckSaving(false)
+      if (response.success) {
+        onSave?.();
+        router.push('/deck');
+      }
+
+      return;
+    }
+
+    if (mode === "edit" && deck) {
+      const response = await UPDATE_DECK_AND_DECK_CARDS_BY_ID(deck._id, {
+        title: deckName,
+        description: deckDescription,
+        visibility: deckVisibility === 'on' ? 'public' : 'private',
+        isDraft: shouldSaveAsDraft()
+      }, flashcardsToSave)
+      setIsDeckSaving(false)
+      if (response.success) {
+        onSave?.();
+        router.push('/deck');
+      }
     }
   }
 
 
   return (
     <div className="modal-box">
-      <h3 className="font-bold text-lg">Save your flashcards in a deck</h3>
+      <h3 className="font-bold text-lg">Save your deck</h3>
+      {shouldSaveAsDraft() && <p className="text-sm text-gray-500">You need to have at least 4 flashcards to publish your deck</p>}
       <form onSubmit={saveFlashcardsInDeck}>
         <label className="form-control w-full">
           <div className="label">
             <span className="label-text">Name</span>
           </div>
-          <input type="text" name="deck-name" autoComplete="off" placeholder="Type here" className="input input-bordered w-full" />
+          <input type="text" defaultValue={deck?.title} name="deck-name" autoComplete="off" placeholder="Type here" className="input input-bordered w-full" />
         </label>
         {formErrors['deck-name'] && <p className="text-red-500 text-sm mt-1">{formErrors['deck-name']}</p>}
         <label className="form-control">
           <div className="label">
             <span className="label-text">Description</span>
           </div>
-          <textarea className="textarea textarea-bordered h-24" name="deck-description" placeholder="Bio"></textarea>
+          <textarea defaultValue={deck?.description} className="textarea textarea-bordered h-24" name="deck-description" placeholder="Bio"></textarea>
         </label>
         {formErrors['deck-description'] && <p className="text-red-500 text-sm mt-1">{formErrors['deck-description']}</p>}
 
@@ -86,8 +133,12 @@ export default function SaveDeckForm({ flashcards, onCancel }: { flashcards: IFl
         </div>
 
         <div className="form-actions my-4 flex justify-end gap-2">
-          <button className="btn btn-active btn-neutral" disabled={isDeckSaving} onClick={onCancel}>Cancel</button>
-          <button type="submit" className="btn btn-active btn-primary">{isDeckSaving ? 'Saving...' : 'Save'}</button>
+          <button className="btn btn-neutral" disabled={isDeckSaving} onClick={onCancel}>Cancel</button>
+          {shouldSaveAsDraft() ? (
+            <button type="submit" className="btn btn-primary">{isDeckSaving ? 'Saving...' : 'Save as draft'}</button>
+          ) : (
+            <button type="submit" className="btn btn-primary">{isDeckSaving ? 'Saving...' : 'Save'}</button>
+          )}
         </div>
       </form>
     </div>

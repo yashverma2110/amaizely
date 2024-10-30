@@ -50,7 +50,8 @@ export async function GET_DECK_AND_DECK_CARDS(deckId: string) {
 }
 
 export interface IFlashcard {
-  topic: string;
+  _id?: string;
+  title: string;
   content: string;
   hidden?: boolean;
 }
@@ -144,8 +145,9 @@ export async function CREATE_DECK_WITH_FLASHCARDS(payload: {
   title: string;
   description: string;
   visibility?: 'public' | 'private',
+  isDraft?: boolean,
   flashcards: {
-    topic: string;
+    title: string;
     content: string;
     order: number;
   }[]
@@ -201,6 +203,34 @@ export async function GET_DECK_AND_DECK_CARDS_WITH_ID(deckId: string) {
 export async function SAVE_DECK_AND_DECK_CARDS_WITH_ID(deckId: string) {
   try {
     const response = await AxiosInstance.post(`/deck/${deckId}/save`)
+
+    return {
+      success: true,
+      deck: response.data.deck,
+      flashcards: response.data.flashcards
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}
+
+export async function UPDATE_DECK_AND_DECK_CARDS_BY_ID(deckId: string, deck: any, flashcards: any) {
+  try {
+    const response = await AxiosInstance.put(`/deck/${deckId}/update`, {
+      deck,
+      flashcards
+    })
 
     return {
       success: true,

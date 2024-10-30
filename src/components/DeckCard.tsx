@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import type { IDeck } from "@/types/IDeck";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faPencil } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import DeckDeletion from "./DeckDeletion";
 
@@ -21,12 +21,22 @@ export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: str
             </p>
 
             <div className="card-actions mt-4 justify-end">
-              <Link href={`/revise/${deck._id}`}>
+              <Link href={`/deck/edit/${deck._id}`}>
                 <button className="btn btn-primary btn-sm">
-                  <FontAwesomeIcon icon={faPlay} className="h-4 w-4" />
-                  Revise
+                  <FontAwesomeIcon icon={faPencil} className="h-4 w-4" />
+                  Edit
                 </button>
               </Link>
+              {
+                !deck.isDraft && (
+                  <Link href={`/revise/${deck._id}`}>
+                    <button className="btn btn-primary btn-sm">
+                      <FontAwesomeIcon icon={faPlay} className="h-4 w-4" />
+                      Revise
+                    </button>
+                  </Link>
+                )
+              }
             </div>
           </div>
         </div>
