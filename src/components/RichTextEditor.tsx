@@ -18,10 +18,12 @@ interface IRichTextEditorProps {
   size?: "sm" | "md" | "lg",
   message?: string,
   limit?: number,
-  onUpdate: (value: string) => void
+  onUpdate: (value: string) => void,
+  disableCode?: boolean,
+  disableLists?: boolean
 }
 
-const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpdate }: IRichTextEditorProps) => {
+const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpdate, disableCode = false, disableLists = false }: IRichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -55,12 +57,12 @@ const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpd
   }
 
   const toolbarButtons = [
-    { icon: faBold, onClick: toggleBold, isActive: editor?.isActive('bold') },
-    { icon: faItalic, onClick: toggleItalic, isActive: editor?.isActive('italic') },
-    { icon: faUnderline, onClick: toggleUnderline, isActive: editor?.isActive('underline') },
-    { icon: faCode, onClick: toggleCode, isActive: editor?.isActive('code') },
-    { icon: faListNumeric, onClick: toggleOrderedList, isActive: editor?.isActive('orderedList') },
-    { icon: faList, onClick: toggleBulletList, isActive: editor?.isActive('bulletList') }
+    { icon: faBold, onClick: toggleBold, isActive: editor?.isActive('bold'), hide: false },
+    { icon: faItalic, onClick: toggleItalic, isActive: editor?.isActive('italic'), hide: false },
+    { icon: faUnderline, onClick: toggleUnderline, isActive: editor?.isActive('underline'), hide: false },
+    { icon: faCode, onClick: toggleCode, isActive: editor?.isActive('code'), hide: disableCode },
+    { icon: faListNumeric, onClick: toggleOrderedList, isActive: editor?.isActive('orderedList'), hide: disableLists },
+    { icon: faList, onClick: toggleBulletList, isActive: editor?.isActive('bulletList'), hide: disableLists }
   ]
 
   function isCharacterLimitAlmostReached() {
@@ -108,7 +110,7 @@ const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpd
           {toolbarButtons.map((button, index) => (
             <button
               key={index}
-              className={`btn btn-square btn-sm btn-ghost md:btn-md rounded-none ${button.isActive ? 'btn-active' : ''}`}
+              className={`btn btn-square btn-sm btn-ghost md:btn-md rounded-none ${button.isActive ? 'btn-active' : ''} ${button.hide ? 'hidden' : ''}`}
               onClick={button.onClick}
             >
               <FontAwesomeIcon icon={button.icon} />

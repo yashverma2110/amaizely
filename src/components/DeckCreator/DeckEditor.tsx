@@ -145,6 +145,8 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
                   limit={80}
                   placeholder="Flashcard title"
                   size="sm"
+                  disableCode
+                  disableLists
                   message={getErrorForFlashcard(index).title}
                   onUpdate={value => updateFlashcard(index, value, "title")}
                 />
