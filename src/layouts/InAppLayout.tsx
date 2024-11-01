@@ -1,4 +1,3 @@
-import AlertsManager from "@/components/AlertsManager";
 import BottomNavigation from "@/components/BottomNavigation";
 import AppHeader from "@/components/ui/AppHeader";
 import Sidebar from "@/components/ui/Sidebar";

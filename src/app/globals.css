@@ -2,9 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+.in-app-layout {
   padding-top: env(safe-area-inset-top, 20px);
   padding-bottom: env(safe-area-inset-bottom, 20px);
+  overflow: hidden;
 }
 
 .blob-bg {
