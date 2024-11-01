@@ -29,8 +29,10 @@ export default async function DeckRevisionPage({ params, searchParams }: { param
 
   return (
     <div className="deck-revision-page h-full grid grid-rows-12">
-      <div className="row-span-1 p-4 text-center bg-white drop-shadow">
-        <h1 className="text-xl font-semibold">{response.deck.title}</h1>
+      <div className="navbar-container row-span-1 md:p-2" >
+        <div className="h-full bg-base-100 flex items-center justify-center text-center drop-shadow md:rounded-lg">
+          <h1 className="text-xl font-semibold">{response.deck.title}</h1>
+        </div>
       </div>
       <div className={authSid ? "row-span-11" : "row-span-10"}>
         <FlashcardContainer flashcards={response.flashcards} />
