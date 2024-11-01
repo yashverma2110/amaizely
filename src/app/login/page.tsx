@@ -7,7 +7,7 @@ export default function Login() {
       <div className="mockup-window glass drop-shadow-lg">
         <hr className="mx-1 border-neutral-300" />
         <div className="flex p-4 w-full max-w-sm">
-          <Suspense fallback={<div className="skeleton w-full h-96"></div>}>
+          <Suspense fallback={<div className="skeleton w-80 h-96"></div>}>
             <AuthForm className="w-full" type="login" />
           </Suspense>
         </div>
