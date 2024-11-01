@@ -23,6 +23,10 @@ export default function DeckDeletion({ deckId, deckName }: { deckId: string, dec
     window.location.reload();
   }
 
+  function handleCancel() {
+    deckDeletionModal.current?.close();
+  }
+
   return (
     <>
       <button className="btn btn-xs btn-error z-10" onClick={handleDeletionConfirmation}>
@@ -35,7 +39,7 @@ export default function DeckDeletion({ deckId, deckName }: { deckId: string, dec
           <p className="py-4 text-sm text-gray-500">Deleting <strong>{deckName}</strong> will remove it from your decks.</p>
 
           <div className="modal-action flex justify-end gap-1">
-            <button className="btn btn-sm btn-ghost">Cancel</button>
+            <button className="btn btn-sm btn-ghost" onClick={handleCancel}>Cancel</button>
             <button className="btn btn-sm btn-error text-white" onClick={handleDeletion}>
               {
                 isDeleting ? <FontAwesomeIcon icon={faSpinner} className="animate-spin" /> : 'Delete'
