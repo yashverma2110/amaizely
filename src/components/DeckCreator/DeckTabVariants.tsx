@@ -8,7 +8,7 @@ export default function DeckTabVariants() {
   const pathname = usePathname();
 
   return (
-    <div role="tablist" className="tabs tabs-md md:tabs-lg bg-white tabs-bordered">
+    <div role="tablist" className="md:border-l md:border-neutral-200 shadow-inner tabs tabs-md md:tabs-lg bg-white tabs-bordered">
       <Link
         role="tab"
         href="/deck/create/youtube"

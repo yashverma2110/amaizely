@@ -25,7 +25,7 @@ export default async function DeckPage() {
 
   return (
     <div className="deck-page">
-      <section className="deck-actions pt-4 px-4 flex flex-col gap-2">
+      <section className="deck-actions pt-4 px-4 flex flex-col gap-2 md:hidden">
         <Link href="/deck/create/youtube" className="w-full">
           <button className="btn btn-active btn-primary w-full">
             <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />

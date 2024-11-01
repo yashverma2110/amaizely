@@ -7,13 +7,15 @@ import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
 import { GET_USER } from "@/services/AuthService"
 import SaveDeckForm from "../SaveDeckForm"
+import AILoadingState from "../ui/AILoadingState"
 
 interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text'
 }
 export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps) {
   const [flashcards, setFlashcards] = useState<IFlashcard[]>([])
-
+  const [websiteLink, setWebsiteLink] = useState<string>("")
+  const [youtubeLink, setYoutubeLink] = useState<string>("")
   const [isPageLoading, setIsPageLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -54,6 +56,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   }
 
   async function handleDeckCreationWithYoutube(videoId: string) {
+    setYoutubeLink(videoId);
     setIsLoading(true)
     const response = await GENERATE_FLASHCARDS_FROM_YOUTUBE(videoId)
     setIsLoading(false)
@@ -64,6 +67,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   }
 
   async function handleDeckCreationWithWebsite(website: string) {
+    setWebsiteLink(website);
     setIsLoading(true)
     const response = await GENERATE_FLASHCARDS_FROM_WEBSITE(website)
     setIsLoading(false)
@@ -114,26 +118,22 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       </div>
 
       {isLoading && (
-        <section className="loading-section h-[1000px] md:h-[500px] grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
-          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
-          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
-          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
-          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
-          <div className="skeleton bg-gray-300 h-full w-full drop-shadow"></div>
+        <section className="loading-section my-8 flex justify-center">
+          <AILoadingState mode={variant} link={youtubeLink || websiteLink} />
         </section>
       )}
 
       {
         flashcards.length > 0 && (
-          <section className="flashcards-container space-y-4">
-            <div className="flashcards-toolbar px-4">
+          <section className="flashcards-container w-full space-y-4">
+            <div className="flashcards-toolbar">
               {isAuthenticated ? 
-              <button className="btn btn-warning w-full md:w-auto" onClick={() => saveDeckModalRef.current?.showModal()}>
+                <button className="btn btn-warning w-full" onClick={() => saveDeckModalRef.current?.showModal()}>
                 <FontAwesomeIcon icon={faFloppyDisk} className="h-5 w-5" />
                   {isAuthenticated ? 'Save' : 'Login to save'}
               </button>
                 :
-                <Link href="/login" className="btn btn-warning w-full md:w-auto">
+                <Link href="/login" className="btn btn-warning w-full">
                   <FontAwesomeIcon icon={faFloppyDisk} className="h-5 w-5" />
                   Login to save
                 </Link>

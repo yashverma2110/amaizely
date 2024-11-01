@@ -29,7 +29,7 @@ export default function BottomNavigation({ className }: { className?: string }) 
   return (
     <nav
       id="bottom-navigation"
-      className={`overflow-hidden shadow-shadow-top shadow-gray-200 rounded-t-3xl bg-white border-t border-gray-200 grid grid-cols-3 ${className}`}
+      className={`overflow-hidden drop-shadow-top rounded-t-3xl bg-white border-t border-gray-200 grid grid-cols-3 ${className}`}
     >
       <ul>
         <Link href="/deck" className={getNavIconClass("/deck")}>

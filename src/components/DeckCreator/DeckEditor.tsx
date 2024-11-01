@@ -158,7 +158,7 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
                 placeholder="Some interesting information that you want to remember"
                 onUpdate={value => updateFlashcard(index, value, "content")}
               />
-              <div className="card-actions justify-between">
+              <div className="card-actions grid grid-cols-3">
                 <button className="btn btn-primary btn-sm" disabled={index === 0} onClick={() => moveFlashcard(index, "up")}>
                   <FontAwesomeIcon icon={faArrowUp} />
                   Up
