@@ -68,7 +68,7 @@ export async function GET_USER() {
 
 export async function LOGOUT_USER() {
   try {
-    const response = await AxiosInstance.post("/auth/logout");
+    const response = await AxiosInstance.get("/auth/logout");
 
     return {
       success: true,
