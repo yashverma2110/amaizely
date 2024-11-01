@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 .in-app-layout {
-  padding-top: env(safe-area-inset-top, 20px);
-  padding-bottom: env(safe-area-inset-bottom, 20px);
+  height: 100vh;
+  max-height: 100vh;
   overflow: hidden;
 }
 
