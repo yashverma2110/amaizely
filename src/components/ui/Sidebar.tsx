@@ -63,7 +63,8 @@ export default function Sidebar({ className }: { className: string }) {
 
   return (
     <div className={`shadow-md p-4 bg-white gap-2 ${className}`}>
-      <Link className="btn btn-ghost px-4 text-xl" href="/deck">
+      <Link className="btn btn-ghost flex items-center justify-center gap-2 text-xl p-0" href="/deck">
+        <FontAwesomeIcon icon={faBrain} />
         <p>am<span>(AI)</span>zely</p>
       </Link>
 
