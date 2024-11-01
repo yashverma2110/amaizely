@@ -1,17 +1,22 @@
 'use client';
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { REGISTER_USER, LOGIN_USER } from "@/services/AuthService";
 import GoogleIcon from "@/components/ui/GoogleIcon";
 import { isProduction } from "@/utils/EnvUtils";
 import BaseUrl from "@/constants/BaseUrl";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 interface IAuthFormProps {
   type: "login" | "register";
   className?: string;
 }
 export function AuthForm({ type, className }: IAuthFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const query = useSearchParams();
   const router = useRouter();
 
@@ -26,12 +31,13 @@ export function AuthForm({ type, className }: IAuthFormProps) {
 
   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
+    setIsSubmitting(true)
     if (type === "login") {
       await handleLogin(event);
     } else {
       await handleSignUp(event);
     }
+    setIsSubmitting(false)
   }
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
@@ -90,7 +96,15 @@ export function AuthForm({ type, className }: IAuthFormProps) {
           <input name="password" type="password" className="grow" placeholder="password" />
         </label>
 
-        <button type="submit" className="btn btn-primary mt-4">Login</button>
+        <button type="submit" className="btn btn-primary mt-4">
+          {
+            isSubmitting ? (
+              <FontAwesomeIcon icon={faSpinner} className="h-5 w-5 animate-spin" />
+            ) : (
+              'Login'
+            )
+          }
+        </button>
       </form>}
 
       {type === 'register' && <form className="w-full flex flex-col gap-2" onSubmit={handleFormSubmit}>
@@ -111,7 +125,15 @@ export function AuthForm({ type, className }: IAuthFormProps) {
           <input name="password" type="password" className="grow" placeholder="password" />
         </label>
 
-        <button type="submit" className="btn btn-primary mt-4">Register</button>
+        <button type="submit" className="btn btn-primary mt-4">
+          {
+            isSubmitting ? (
+              <FontAwesomeIcon icon={faSpinner} className="h-5 w-5 animate-spin" />
+            ) : (
+              'Register'
+            )
+          }
+        </button>
       </form>}
 
       <div className="oauth-ctas w-full mt-4">

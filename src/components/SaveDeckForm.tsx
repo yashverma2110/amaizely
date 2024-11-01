@@ -80,12 +80,14 @@ export default function SaveDeckForm({ flashcards, deck, mode, onSave, onCancel 
         visibility: deckVisibility === 'on' ? 'public' : 'private',
         isDraft: shouldSaveAsDraft()
       })
-      setIsDeckSaving(false)
+
       if (response.success) {
         onSave?.();
         router.push('/deck');
+        return;
       }
 
+      setIsDeckSaving(false)
       return;
     }
 
@@ -96,12 +98,15 @@ export default function SaveDeckForm({ flashcards, deck, mode, onSave, onCancel 
         visibility: deckVisibility === 'on' ? 'public' : 'private',
         isDraft: shouldSaveAsDraft()
       }, flashcardsToSave)
-      setIsDeckSaving(false)
       if (response.success) {
         onSave?.();
         router.push('/deck');
+        return;
       }
+
+      setIsDeckSaving(false)
     }
+
   }
 
 
