@@ -14,7 +14,7 @@ export default function Home() {
               Don&apos;t just read, remember! A smart way to create flashcards to help you stay ahead.
             </p>
             <button className="btn btn-primary">
-              <Link href="/deck/create/youtube">
+              <Link href="/login">
                 Get Started
               </Link>
             </button>
