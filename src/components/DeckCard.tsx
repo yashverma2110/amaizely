@@ -8,7 +8,7 @@ export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: str
   return (
     <div className="deck-card">
       <div className="stack w-full">
-        <div className={`border-base-content h-full card border ${bgClass ?? 'bg-base-100'}`}>
+        <div className={`overflow-hidden border-base-content h-full card border ${bgClass ?? 'bg-base-100'}`}>
           <div className="card-body relative overflow-hidden p-4">
             <div className="circle absolute -top-2 -right-4 skew-x-6 w-32 h-10 rounded-full bg-yellow-200" />
             <div className="card-title flex justify-between">
