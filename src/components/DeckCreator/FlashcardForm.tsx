@@ -134,8 +134,8 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
               autoComplete="off"
               onFocus={() => setErrorMessage("")}
             />
-            <kbd className="kbd kbd-sm">⌘</kbd>
-            <kbd className="kbd kbd-sm">V</kbd>
+            <kbd className="kbd kbd-sm hidden md:block">⌘</kbd>
+            <kbd className="kbd kbd-sm hidden md:block">V</kbd>
           </label>
         ) : (
           <textarea
