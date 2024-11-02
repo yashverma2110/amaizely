@@ -11,6 +11,11 @@ export default function FormErrorMessage({ message, size = 'md', align = 'center
     if (size === 'lg') return 'text-lg';
   }
 
-  return <div className={`text-red-500 w-full ${align === 'center' ? 'text-center' : 'text-left'} ${getTextSize()}`}>{message}</div>
+  function getTextAlign() {
+    if (align === 'center') return 'text-center';
+    if (align === 'left') return 'px-2 text-left';
+  }
+
+  return <div className={`text-red-500 w-full -mt-1 ${getTextAlign()} ${getTextSize()}`}>{message}</div>
 }
 
