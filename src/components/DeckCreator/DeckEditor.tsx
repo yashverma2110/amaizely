@@ -163,7 +163,7 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
                   <FontAwesomeIcon icon={faArrowUp} />
                   Up
                 </button>
-                <button className="btn btn-error text-white btn-sm" onClick={() => deleteFlashcard(index)}>
+                <button className="btn btn-error whitespace-nowrap text-white btn-sm" onClick={() => deleteFlashcard(index)}>
                   <FontAwesomeIcon icon={faTrash} />
                   Delete
                 </button>

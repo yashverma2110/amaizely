@@ -8,6 +8,7 @@ import Link from "next/link"
 import { GET_USER } from "@/services/AuthService"
 import SaveDeckForm from "../SaveDeckForm"
 import AILoadingState from "../ui/AILoadingState"
+import FormErrorMessage from "../ui/FormErrorMessage"
 
 interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text'
@@ -19,6 +20,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   const [isPageLoading, setIsPageLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string>("")
 
   const saveDeckModalRef = useRef<HTMLDialogElement>(null)
 
@@ -64,6 +66,8 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       setFlashcards(response.flashcards)
       return;
     }
+
+    setErrorMessage(response.message)
   }
 
   async function handleDeckCreationWithWebsite(website: string) {
@@ -75,6 +79,8 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       setFlashcards(response.flashcards)
       return;
     }
+
+    setErrorMessage(response.message)
   }
 
   async function handleDeckCreationWithText(content: string) {
@@ -88,6 +94,10 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   }
 
   async function handleDeckCreation(input: string) {
+    if (isLoading) {
+      return;
+    }
+
     switch (variant) {
       case 'youtube':
         return handleDeckCreationWithYoutube(input)
@@ -114,6 +124,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
           <h2 className="card-title">{getCardTitle()}</h2>
           <p>{getCardBody()}</p>
           <FlashcardForm variant={variant} onSubmit={handleDeckCreation} />
+          {errorMessage && <FormErrorMessage message={errorMessage} />}
         </div>
       </div>
 

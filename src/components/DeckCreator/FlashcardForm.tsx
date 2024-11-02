@@ -64,16 +64,6 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
           content,
         }
       }
-
-      try {
-        await fetch(content)
-      } catch (error) {
-        setErrorMessage("The website is not reachable")
-        return {
-          isValid: false,
-          content,
-        }
-      }
     }
 
     if (variant === 'text') {
