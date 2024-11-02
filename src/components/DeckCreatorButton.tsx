@@ -1,12 +1,26 @@
 "use client"
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DeckCreatorForm from "./DeckCreaterForm";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function DeckCreatorButton() {
   const deckModal = useRef<HTMLDialogElement>(null)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('mode') === 'create') {
+      deckModal.current?.showModal();
+    }
+  }, [searchParams])
+
+  function handleClose() {
+    router.replace('/deck');
+    deckModal.current?.close();
+  }
 
   return (
     <>
@@ -16,7 +30,7 @@ export default function DeckCreatorButton() {
       </button>
 
       <dialog ref={deckModal} id="deck-creator-modal" className="modal modal-bottom sm:modal-middle">
-        <DeckCreatorForm onCancel={() => deckModal.current?.close()} />
+        <DeckCreatorForm onCancel={handleClose} />
       </dialog>
     </>
   )
