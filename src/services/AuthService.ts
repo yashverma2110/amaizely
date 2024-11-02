@@ -18,7 +18,7 @@ export async function LOGIN_USER({ email, password }: any) {
 
     return {
       success: false,
-      status: err.status,
+      status: err.response?.status,
       error: err.response?.data
     }
   }
@@ -42,7 +42,7 @@ export async function REGISTER_USER({ firstName, lastName, email, password }: an
 
     return {
       success: false,
-      status: err.status,
+      status: err.response?.status,
       error: err.response?.data
     }
   }

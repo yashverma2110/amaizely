@@ -9,6 +9,7 @@ import { isProduction } from "@/utils/EnvUtils";
 import BaseUrl from "@/constants/BaseUrl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import FormErrorMessage from "./ui/FormErrorMessage";
 
 interface IAuthFormProps {
   type: "login" | "register";
@@ -16,6 +17,7 @@ interface IAuthFormProps {
 }
 export function AuthForm({ type, className }: IAuthFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorType, setErrorType] = useState<"duplicate" | "invalid" | "not_found" | "generic" | "none">("none")
 
   const query = useSearchParams();
   const router = useRouter();
@@ -54,7 +56,20 @@ export function AuthForm({ type, className }: IAuthFormProps) {
       }
 
       router.push("/deck")
+      return;
     }
+
+    if (response.status === 401) {
+      setErrorType("invalid")
+      return;
+    }
+
+    if (response.status === 404) {
+      setErrorType("not_found")
+      return;
+    }
+
+    setErrorType("generic")
   }
 
   async function handleSignUp(event: React.FormEvent<HTMLFormElement>) {
@@ -68,7 +83,15 @@ export function AuthForm({ type, className }: IAuthFormProps) {
 
     if (response.success) {
       router.push("/deck")
+      return;
     }
+
+    if (response.status === 409) {
+      setErrorType("duplicate")
+      return;
+    }
+
+    setErrorType("generic")
   }
 
   function handleGoogleSSO() {
@@ -95,6 +118,10 @@ export function AuthForm({ type, className }: IAuthFormProps) {
           Password
           <input name="password" type="password" className="grow" placeholder="password" />
         </label>
+
+        {errorType === "invalid" && <FormErrorMessage message="Invalid email or password" />}
+        {errorType === "not_found" && <FormErrorMessage message="Email not found, please register" />}
+        {errorType === "generic" && <FormErrorMessage message="Something went wrong, please try again" />}
 
         <button type="submit" className="btn btn-primary mt-4">
           {
@@ -125,7 +152,10 @@ export function AuthForm({ type, className }: IAuthFormProps) {
           <input name="password" type="password" className="grow" placeholder="password" />
         </label>
 
-        <button type="submit" className="btn btn-primary mt-4">
+        {errorType === "duplicate" && <FormErrorMessage message="Email already in use" />}
+        {errorType === "generic" && <FormErrorMessage message="Something went wrong, please try again" />}
+
+        <button type="submit" className="btn btn-primary mt-2">
           {
             isSubmitting ? (
               <FontAwesomeIcon icon={faSpinner} className="h-5 w-5 animate-spin" />
