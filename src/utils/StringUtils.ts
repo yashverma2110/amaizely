@@ -1,3 +1,11 @@
+export function isStringValid(input: string): boolean {
+  return input !== undefined && input !== null && input.trim() !== '';
+}
+
+export function isEmailValid(input: string): boolean {
+  return isStringValid(input) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
+}
+
 export function extractAlphanumeric(input: string): string {
   const alphanumericSpaceRegex = /[a-zA-Z0-9]+|\s+/g;
 

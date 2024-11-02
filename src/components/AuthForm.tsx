@@ -10,6 +10,7 @@ import BaseUrl from "@/constants/BaseUrl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import FormErrorMessage from "./ui/FormErrorMessage";
+import { isEmailValid, isStringValid } from "@/utils/StringUtils";
 
 interface IAuthFormProps {
   type: "login" | "register";
@@ -17,6 +18,7 @@ interface IAuthFormProps {
 }
 export function AuthForm({ type, className }: IAuthFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({})
   const [errorType, setErrorType] = useState<"duplicate" | "invalid" | "not_found" | "generic" | "none">("none")
 
   const query = useSearchParams();
@@ -33,7 +35,7 @@ export function AuthForm({ type, className }: IAuthFormProps) {
 
   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsSubmitting(true)
+
     if (type === "login") {
       await handleLogin(event);
     } else {
@@ -44,8 +46,20 @@ export function AuthForm({ type, className }: IAuthFormProps) {
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     setErrorType("none")
     const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
+    const email = (formData.get("email") as string).toLowerCase();
     const password = formData.get("password") as string;
+
+    if (!isEmailValid(email)) {
+      setFormErrors({ email: "Invalid email" })
+      return;
+    }
+
+    if (!isStringValid(password)) {
+      setFormErrors({ password: "Password is required" })
+      return;
+    }
+
+    setIsSubmitting(true)
 
     const response = await LOGIN_USER({ email, password });
 
@@ -81,6 +95,28 @@ export function AuthForm({ type, className }: IAuthFormProps) {
     const lastName = formData.get("lastName") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+
+    if (!isStringValid(firstName)) {
+      setFormErrors({ firstName: "First name is required" })
+      return;
+    }
+
+    if (!isStringValid(lastName)) {
+      setFormErrors({ lastName: "Last name is required" })
+      return;
+    }
+
+    if (!isEmailValid(email)) {
+      setFormErrors({ email: "Invalid email" })
+      return;
+    }
+
+    if (!isStringValid(password)) {
+      setFormErrors({ password: "Password is required" })
+      return;
+    }
+
+    setIsSubmitting(true)
 
     const response = await REGISTER_USER({ firstName, lastName, email, password });
 
@@ -119,10 +155,12 @@ export function AuthForm({ type, className }: IAuthFormProps) {
           Email
           <input name="email" type="text" className="grow" placeholder="gokusan@gmail.com" />
         </label>
+        {formErrors.email && <FormErrorMessage message={formErrors.email} size="sm" align="left" />}
         <label className="input input-bordered flex items-center gap-2">
           Password
           <input name="password" type="password" className="grow" placeholder="password" />
         </label>
+        {formErrors.password && <FormErrorMessage message={formErrors.password} size="sm" align="left" />}
 
         {errorType === "invalid" && <FormErrorMessage message="Invalid email or password" />}
         {errorType === "not_found" && <FormErrorMessage message="Email not found, please register" />}
@@ -144,18 +182,22 @@ export function AuthForm({ type, className }: IAuthFormProps) {
           <span className="whitespace-nowrap">First Name</span>
           <input name="firstName" type="text" className="grow" placeholder="Son" />
         </label>
+        {formErrors.firstName && <FormErrorMessage message={formErrors.firstName} size="sm" align="left" />}
         <label className="input input-bordered flex items-center gap-4">
           <span className="whitespace-nowrap">Last Name</span>
           <input name="lastName" type="text" className="grow" placeholder="Goku" />
         </label>
+        {formErrors.lastName && <FormErrorMessage message={formErrors.lastName} size="sm" align="left" />}
         <label className="input input-bordered flex items-center gap-4">
           Email
           <input name="email" type="text" className="grow" placeholder="gokusan@gmail.com" />
         </label>
+        {formErrors.email && <FormErrorMessage message={formErrors.email} size="sm" align="left" />}
         <label className="input input-bordered flex items-center gap-2">
           Password
           <input name="password" type="password" className="grow" placeholder="password" />
         </label>
+        {formErrors.password && <FormErrorMessage message={formErrors.password} size="sm" align="left" />}
 
         {errorType === "duplicate" && <FormErrorMessage message="Email already in use" />}
         {errorType === "generic" && <FormErrorMessage message="Something went wrong, please try again" />}
