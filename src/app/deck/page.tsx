@@ -1,11 +1,10 @@
 import { GET_MY_DECKS } from "@/services/DeckService";
 import DeckCard from '@/components/DeckCard';
 import type { IDeck } from '@/types/IDeck';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
 import { cookies } from "next/headers";
 import { setHeaders } from "@/config/AxiosService";
+import { Suspense } from "react";
+import DeckCreatorButton from "@/components/DeckCreatorButton";
 
 export default async function DeckPage() {
   const cookieStore = cookies();
@@ -26,12 +25,9 @@ export default async function DeckPage() {
   return (
     <div className="deck-page">
       <section className="deck-actions pt-4 px-4 flex flex-col gap-2 md:hidden">
-        <Link href="/deck/create/youtube" className="w-full">
-          <button className="btn btn-active btn-primary w-full">
-            <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
-            Create Deck
-          </button>
-        </Link>
+        <Suspense fallback={<div className="skeleton h-12 w-full"></div>}>
+          <DeckCreatorButton />
+        </Suspense>
       </section>
 
       {!deckResponse && (

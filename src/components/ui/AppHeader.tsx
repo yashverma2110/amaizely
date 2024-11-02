@@ -14,7 +14,7 @@ export default function AppHeader({ className }: { className: string }) {
     <div className={`navbar z-50 bg-base-100 shadow-md ${className}`}>
       <div className="flex-1 flex justify-between md:hidden">
         <Link className="btn btn-ghost flex items-center justify-center gap-2 text-xl p-0" href="/deck">
-          <FontAwesomeIcon icon={faBrain} />
+          <FontAwesomeIcon icon={faBrain} className="h-6 w-6" />
           <p>am<span>(AI)</span>zely</p>
         </Link>
 
