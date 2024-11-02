@@ -16,11 +16,9 @@ export function isValidYouTubeUrl(url: string) {
 }
 
 export function isValidWebsiteURL(url: string): boolean {
-  // Regular expression for URL validation
-  const urlPattern = new RegExp(
-    'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
-    'i'
-  );
+  if (!url) {
+    return false;
+  }
 
-  return urlPattern.test(url);
+  return url.startsWith('http://') || url.startsWith('https://');
 }
