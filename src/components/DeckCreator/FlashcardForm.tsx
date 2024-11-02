@@ -14,7 +14,7 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  function handleValidation(content: string) {
+  async function handleValidation(content: string) {
     if (variant === 'youtube') {
       if ((content || "").trim() === "") {
         setErrorMessage("Please paste a YouTube link")
@@ -64,6 +64,16 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
           content,
         }
       }
+
+      try {
+        await fetch(content)
+      } catch (error) {
+        setErrorMessage("The website is not reachable")
+        return {
+          isValid: false,
+          content,
+        }
+      }
     }
 
     if (variant === 'text') {
@@ -108,7 +118,7 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
     const formData = new FormData(e.currentTarget)
     const text = formData.get("text-field") as string
 
-    const { isValid, content } = handleValidation(text)
+    const { isValid, content } = await handleValidation(text)
 
     if (!isValid) {
       return
