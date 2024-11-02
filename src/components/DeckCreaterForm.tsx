@@ -1,4 +1,4 @@
-import { faBrain, faLink, faPenAlt, faPlus, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faBrain, faFilePdf, faLink, faPenAlt, faPlus, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
@@ -21,6 +21,12 @@ export default function DeckCreatorForm({ onCancel }: { onCancel: () => void }) 
       label: "Text",
       description: "Use custom text to create flashcards",
       href: "/deck/create/text",
+    },
+    {
+      icon: faFilePdf,
+      label: "PDF",
+      description: "Use a PDF file to create flashcards",
+      href: "/deck/create/pdf",
     },
   ]
 

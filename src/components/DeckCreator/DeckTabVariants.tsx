@@ -29,6 +29,15 @@ export default function DeckTabVariants() {
       </Link>
       <Link
         role="tab"
+        href="/deck/create/pdf"
+        className={clsx(['tab', {
+          'tab-active': pathname === '/deck/create/pdf'
+        }])}
+      >
+        PDF
+      </Link>
+      <Link
+        role="tab"
         href="/deck/create/text"
         className={clsx(['tab', {
           'tab-active': pathname === '/deck/create/text'

@@ -4,17 +4,49 @@ import { extractAlphanumeric } from '@/utils/StringUtils';
 import { extractYoutubeId, isValidWebsiteURL, isValidYouTubeUrl } from '@/utils/UrlUtils';
 import clsx from 'clsx';
 import { FormEvent, useState } from 'react'
+import FormErrorMessage from '../ui/FormErrorMessage';
 
 interface FlashcardFormProps {
-  variant: 'youtube' | 'website' | 'text'
-  onSubmit: (youtubeLink: string) => Promise<void>
+  variant: 'youtube' | 'website' | 'text' | 'pdf'
+  onSubmit: (youtubeLink?: string, file?: File) => Promise<void>
 }
 
 export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  async function handleValidation(content: string) {
+  async function handleValidation(content: string, pdf?: File) {
+    if (variant === 'pdf') {
+      if (!pdf) {
+        setErrorMessage("Please upload a PDF file")
+        return {
+          isValid: false,
+          content: "",
+        }
+      }
+
+      if (pdf.type !== "application/pdf") {
+        setErrorMessage("The file should be a PDF")
+        return {
+          isValid: false,
+          content: "",
+        }
+      }
+
+      if (pdf.size > 2 * 1024 * 1024) {
+        setErrorMessage("The PDF file should be less than 2MB")
+        return {
+          isValid: false,
+          content: "",
+        }
+      }
+
+      return {
+        isValid: true,
+        file: pdf,
+      }
+    }
+
     if (variant === 'youtube') {
       if ((content || "").trim() === "") {
         setErrorMessage("Please paste a YouTube link")
@@ -107,45 +139,68 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
     }
     const formData = new FormData(e.currentTarget)
     const text = formData.get("text-field") as string
+    const pdf = formData.get("pdf-field") as File
 
-    const { isValid, content } = await handleValidation(text)
+    setIsLoading(true)
+    const { isValid, content, file } = await handleValidation(text, pdf)
 
     if (!isValid) {
+      setIsLoading(false)
       return
     }
 
-    setIsLoading(true)
-    await onSubmit(content)
+    await onSubmit(content, file)
     setIsLoading(false)
+  }
+
+  function getInput() {
+    if (variant === 'pdf') {
+      return (
+        <input
+          type="file"
+          name="pdf-field"
+          accept=".pdf"
+          className="file-input file-input-neutral file-input-bordered w-full"
+        />
+      )
+    }
+
+    if (variant === 'text') {
+      return (
+        <textarea
+          placeholder="Paste your text here"
+          name="text-field"
+          className="textarea textarea-bordered textarea-md w-full"
+          onFocus={() => setErrorMessage("")}
+        />
+      )
+    }
+
+    return (
+      <label className={clsx("w-full shadow-inner input input-bordered flex items-center gap-2", {
+        'input-error': errorMessage
+      })}>
+        <input
+          type="text"
+          name="text-field"
+          className="grow"
+          placeholder="Paste link here"
+          autoComplete="off"
+          onFocus={() => setErrorMessage("")}
+        />
+        <kbd className="kbd kbd-sm hidden md:block">⌘</kbd>
+        <kbd className="kbd kbd-sm hidden md:block">V</kbd>
+      </label>
+    )
   }
 
   return (
     <form className="youtube-actions w-full flex flex-col md:flex-row gap-2" onSubmit={handleSubmit}>
       <div className="flex flex-col w-full">
-        {variant !== 'text' ? (
-          <label className={clsx("w-full shadow-inner input input-bordered flex items-center gap-2", {
-            'input-error': errorMessage
-          })}>
-            <input
-              type="text"
-              name="text-field"
-              className="grow"
-              placeholder="Paste link here"
-              autoComplete="off"
-              onFocus={() => setErrorMessage("")}
-            />
-            <kbd className="kbd kbd-sm hidden md:block">⌘</kbd>
-            <kbd className="kbd kbd-sm hidden md:block">V</kbd>
-          </label>
-        ) : (
-          <textarea
-            placeholder="Paste your text here"
-            name="text-field"
-            className="textarea textarea-bordered textarea-md w-full"
-            onFocus={() => setErrorMessage("")}
-          ></textarea>
-        )}
-        {errorMessage && <p className="text-error">{errorMessage}</p>}
+        {getInput()}
+        <div className="mt-2">
+          {errorMessage && <FormErrorMessage message={errorMessage} size="sm" align="left" />}
+        </div>
       </div>
       <button className="btn btn-primary" type="submit">
         {

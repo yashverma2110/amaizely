@@ -1,5 +1,5 @@
 "use client"
-import { GENERATE_FLASHCARDS_FROM_TEXT, GENERATE_FLASHCARDS_FROM_WEBSITE, GENERATE_FLASHCARDS_FROM_YOUTUBE, IFlashcard } from "@/services/DeckService"
+import { GENERATE_FLASHCARDS_FROM_PDF, GENERATE_FLASHCARDS_FROM_TEXT, GENERATE_FLASHCARDS_FROM_WEBSITE, GENERATE_FLASHCARDS_FROM_YOUTUBE, IFlashcard } from "@/services/DeckService"
 import FlashcardForm from './FlashcardForm'
 import { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -11,7 +11,7 @@ import AILoadingState from "../ui/AILoadingState"
 import FormErrorMessage from "../ui/FormErrorMessage"
 
 interface IFlashcardCreatorProps {
-  variant: 'youtube' | 'website' | 'text'
+  variant: 'youtube' | 'website' | 'text' | 'pdf'
 }
 export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps) {
   const [flashcards, setFlashcards] = useState<IFlashcard[]>([])
@@ -43,6 +43,8 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
         return 'Paste Website link'
       case 'text':
         return 'Paste some text'
+      case 'pdf':
+        return 'Upload a PDF file'
     }
   }
 
@@ -54,6 +56,8 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
         return 'Create a flashcard deck from the content on a website'
       case 'text':
         return 'Create a flashcard deck from your notes or any other text'
+      case 'pdf':
+        return 'Create a flashcard deck from a PDF file'
     }
   }
 
@@ -91,21 +95,45 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       setFlashcards(response.flashcards)
       return;
     }
+
+    setErrorMessage(response.message)
   }
 
-  async function handleDeckCreation(input: string) {
+  async function handleDeckCreationWithPdf(file: File) {
+    setIsLoading(true)
+    const response = await GENERATE_FLASHCARDS_FROM_PDF(file)
+    setIsLoading(false)
+
+    if (response.success && response.flashcards) {
+      setFlashcards(response.flashcards)
+      return;
+    }
+
+    setErrorMessage(response.message)
+    setIsLoading(false)
+  }
+
+  async function handleDeckCreation(input?: string, file?: File) {
     setErrorMessage("")
     if (isLoading) {
       return;
     }
 
-    switch (variant) {
-      case 'youtube':
-        return handleDeckCreationWithYoutube(input)
-      case 'website':
-        return handleDeckCreationWithWebsite(input)
-      case 'text':
-        return handleDeckCreationWithText(input)
+    if (input) {
+      switch (variant) {
+        case 'youtube':
+          return handleDeckCreationWithYoutube(input)
+        case 'website':
+          return handleDeckCreationWithWebsite(input)
+        case 'text':
+          return handleDeckCreationWithText(input)
+      }
+
+      return;
+    }
+
+    if (file) {
+      return handleDeckCreationWithPdf(file)
     }
   }
 

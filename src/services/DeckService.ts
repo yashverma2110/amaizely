@@ -175,9 +175,50 @@ export async function CREATE_DECK_WITH_FLASHCARDS(payload: {
   }
 }
 
-export async function GET_DECK_AND_DECK_CARDS_WITH_ID(deckId: string) {
+export async function CREATE_DECK_WITH_FLASHCARD_PDF(payload: {
+  title: string;
+  description: string;
+  visibility?: 'public' | 'private',
+  isDraft?: boolean,
+  flashcards: {
+    title: string;
+    content: string;
+    order: number;
+  }[]
+}) {
   try {
-    const response = await AxiosInstance.get(`/deck/${deckId}`)
+    const response = await AxiosInstance.post("/deck/create", payload)
+
+    return {
+      success: true,
+      data: response.data
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}
+
+export async function GENERATE_FLASHCARDS_FROM_PDF(file: File) {
+  try {
+    const formData = new FormData();
+    formData.append('pdf', file);
+
+    const response = await AxiosInstance.post(`/flashcards/generate/pdf`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
 
     return {
       success: true,

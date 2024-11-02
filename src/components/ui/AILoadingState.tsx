@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface IAILoadingStateProps {
-  mode: "website" | "youtube" | "text";
+  mode: "website" | "youtube" | "text" | "pdf";
   link?: string;
 }
 
