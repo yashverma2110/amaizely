@@ -118,14 +118,14 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       </div>
 
       {isLoading && (
-        <section className="loading-section my-8 flex justify-center">
+        <section className="loading-section my-8 flex justify-center rounded-xl overflow-hidden drop-shadow-lg">
           <AILoadingState mode={variant} link={youtubeLink || websiteLink} />
         </section>
       )}
 
       {
         flashcards.length > 0 && (
-          <section className="flashcards-container w-full space-y-4">
+          <section className="flashcards-container w-full space-y-4 drop-shadow-lg">
             <div className="flashcards-toolbar">
               {isAuthenticated ? 
                 <button className="btn btn-warning w-full" onClick={() => saveDeckModalRef.current?.showModal()}>

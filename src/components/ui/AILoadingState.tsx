@@ -19,7 +19,7 @@ export default function AILoadingState({ mode, link }: IAILoadingStateProps) {
       time: 5000
     },
     {
-      title: "Creating topics to generate flashcards from",
+      title: "Creating topics",
       time: 5000
     },
     {
@@ -27,7 +27,7 @@ export default function AILoadingState({ mode, link }: IAILoadingStateProps) {
       time: 5000
     },
     {
-      title: "Ensuring quality of flashcards",
+      title: "Ensuring quality",
       time: 5000
     }
   ], [])
@@ -43,7 +43,7 @@ export default function AILoadingState({ mode, link }: IAILoadingStateProps) {
         time: 5000
       },
       {
-        title: "Creating topics to generate flashcards from",
+        title: "Creating topics",
         time: 5000
       },
       {
@@ -51,7 +51,7 @@ export default function AILoadingState({ mode, link }: IAILoadingStateProps) {
         time: 5000
       },
       {
-        title: "Ensuring quality of flashcards",
+        title: "Ensuring quality",
         time: 5000
       }
     ]
@@ -66,7 +66,7 @@ export default function AILoadingState({ mode, link }: IAILoadingStateProps) {
         time: 5000
       },
       {
-        title: "Creating topics to generate flashcards from",
+        title: "Creating topics",
         time: 5000
       },
       {
@@ -74,7 +74,7 @@ export default function AILoadingState({ mode, link }: IAILoadingStateProps) {
         time: 5000
       },
       {
-        title: "Ensuring quality of flashcards",
+        title: "Ensuring quality",
         time: 5000
       }
     ]
@@ -156,7 +156,7 @@ export default function AILoadingState({ mode, link }: IAILoadingStateProps) {
 
   if (mode === "website" || mode === "youtube") {
     return (
-      <div className="mockup-browser bg-base-300 border drop-shadow-lg">
+      <div className="mockup-browser bg-base-300 border-2 border-neutral-200">
         <div className="mockup-browser-toolbar">
           <div className="input">{link}</div>
         </div>
@@ -168,11 +168,11 @@ export default function AILoadingState({ mode, link }: IAILoadingStateProps) {
   }
 
   return (
-    <div className="mockup-code bg-neutral-300 text-neutral-800 drop-shadow-lg">
+    <div className="mockup-code bg-neutral-300 w-full text-neutral-800 border-2 border-neutral-300">
       {
         TEXT_LOADING_STATES.map((state, index) => (
           <pre data-prefix={index === currentTextState ? ">" : "$"}
-            className={clsx({
+            className={clsx(['line-clamp-1'], {
               "text-success": index < currentTextState,
               "text-warning": index === currentTextState,
               "hidden": index > currentTextState
