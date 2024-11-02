@@ -39,10 +39,10 @@ export function AuthForm({ type, className }: IAuthFormProps) {
     } else {
       await handleSignUp(event);
     }
-    setIsSubmitting(false)
   }
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+    setErrorType("none")
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -59,6 +59,8 @@ export function AuthForm({ type, className }: IAuthFormProps) {
       return;
     }
 
+    setIsSubmitting(false)
+
     if (response.status === 401) {
       setErrorType("invalid")
       return;
@@ -73,6 +75,7 @@ export function AuthForm({ type, className }: IAuthFormProps) {
   }
 
   async function handleSignUp(event: React.FormEvent<HTMLFormElement>) {
+    setErrorType("none")
     const formData = new FormData(event.currentTarget);
     const firstName = formData.get("firstName") as string;
     const lastName = formData.get("lastName") as string;
@@ -85,6 +88,8 @@ export function AuthForm({ type, className }: IAuthFormProps) {
       router.push("/deck")
       return;
     }
+
+    setIsSubmitting(false)
 
     if (response.status === 409) {
       setErrorType("duplicate")
