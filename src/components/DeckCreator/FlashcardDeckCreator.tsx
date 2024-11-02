@@ -94,6 +94,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   }
 
   async function handleDeckCreation(input: string) {
+    setErrorMessage("")
     if (isLoading) {
       return;
     }

@@ -161,15 +161,15 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
               <div className="card-actions grid grid-cols-3">
                 <button className="btn btn-primary btn-sm" disabled={index === 0} onClick={() => moveFlashcard(index, "up")}>
                   <FontAwesomeIcon icon={faArrowUp} />
-                  Up
+                  <span className="max-[382px]:hidden">Up</span>
                 </button>
                 <button className="btn btn-error whitespace-nowrap text-white btn-sm" onClick={() => deleteFlashcard(index)}>
                   <FontAwesomeIcon icon={faTrash} />
-                  Delete
+                  <span className="max-[382px]:hidden">Delete</span>
                 </button>
                 <button className="btn btn-primary btn-sm" disabled={index === flashcards.length - 1} onClick={() => moveFlashcard(index, "down")}>
                   <FontAwesomeIcon icon={faArrowDown} />
-                  Down
+                  <span className="max-[382px]:hidden">Down</span>
                 </button>
               </div>
             </section>
