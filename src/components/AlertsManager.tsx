@@ -1,36 +1,27 @@
 'use client';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faCircleExclamation, faCircleInfo, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import Alert from "./ui/Alert";
 
-
-interface IAlert {
+export interface IAlert {
   message: string;
   type: "error" | "warning" | "info" | "success";
+  duration?: number;
 }
 export default function AlertsManager({ alerts }: { alerts: IAlert[] }) {
+  const [allAlerts, setAllAlerts] = useState<IAlert[]>([]);
 
-  function getIconForAlertType(type: IAlert["type"]) {
-    switch (type) {
-      case "info":
-        return faCircleInfo;
-      case "success":
-        return faCircleCheck;
-      case "error":
-        return faCircleXmark;
-      case "warning":
-        return faCircleExclamation;
-      default:
-        return faCircleInfo;
-    }
+  useEffect(() => {
+    setAllAlerts(alerts);
+  }, [alerts])
+
+  function onClose(index: number) {
+    setAllAlerts(allAlerts.filter((_, i) => i !== index));
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      {alerts.map((alert) => (
-        <div role="alert" className={`alert alert-${alert.type}`} key={alert.message}>
-          <FontAwesomeIcon icon={getIconForAlertType(alert.type)} />
-          <span>{alert.message}</span>
-        </div>
+    <div className="fixed bottom-16 md:bottom-4 flex flex-col w-full p-4 gap-2">
+      {allAlerts.map((alert, index) => (
+        <Alert key={alert.message} {...alert} onClose={() => onClose(index)} />
       ))}
     </div>
   )

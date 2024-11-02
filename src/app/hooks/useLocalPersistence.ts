@@ -4,11 +4,15 @@ import { Dispatch, SetStateAction, useEffect } from "react";
  * Hook that persists the state to local storage
  * Only works for client-side
  */
-export default function useLocalPersistence<T>({ initialValue, setter, key }: { initialValue?: T, setter: (value: T) => void, key: string }) {
+export default function useLocalPersistence<T>({ initialValue, setter, key, onPersist }: { initialValue?: T, setter: (value: T) => void, key: string, onPersist?: (value: T, timestamp: number) => void }) {
   useEffect(() => {
     const item = localStorage.getItem(key);
     if (item) {
-      setter(JSON.parse(item));
+      const parsedItem = JSON.parse(item);
+      setter(parsedItem.value);
+      if (onPersist) {
+        onPersist(parsedItem.value, parsedItem.timestamp);
+      }
       return;
     }
 
@@ -18,7 +22,8 @@ export default function useLocalPersistence<T>({ initialValue, setter, key }: { 
   }, [setter, key, initialValue])
 
   function persist(value: T) {
-    localStorage.setItem(key, JSON.stringify(value));
+    const valueToPersist: { value: T, timestamp: number } = { value, timestamp: Date.now() };
+    localStorage.setItem(key, JSON.stringify(valueToPersist));
     setter(value);
   }
 

@@ -7,10 +7,6 @@ import CharacterCount from '@tiptap/extension-character-count'
 import Underline from '@tiptap/extension-underline'
 import { faBold, faCode, faItalic, faList, faUnderline, faListNumeric } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import OrderedList from '@tiptap/extension-ordered-list'
-import ListItem from '@tiptap/extension-list-item'
-import BulletList from '@tiptap/extension-bullet-list'
-import Code from '@tiptap/extension-code'
 
 interface IRichTextEditorProps {
   value?: string,
@@ -32,10 +28,6 @@ const RichTextEditor = ({ value, placeholder, size = "md", message, limit, onUpd
       CharacterCount.configure({
         limit,
       }),
-      BulletList,
-      OrderedList,
-      ListItem,
-      Code,
     ],
     immediatelyRender: false,
     content: value,

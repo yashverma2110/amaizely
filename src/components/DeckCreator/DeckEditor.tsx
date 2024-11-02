@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { IFlashcard } from "@/services/DeckService";
 import useLocalPersistence from "@/app/hooks/useLocalPersistence";
 import SaveDeckForm from "@/components/SaveDeckForm";
@@ -7,6 +7,7 @@ import { faArrowDown, faArrowUp, faFloppyDisk, faPlus, faTrash } from "@fortawes
 import RichTextEditor from "../RichTextEditor";
 import { removeHtmlTags } from "@/utils/StringUtils";
 import { IDeck } from "@/types/IDeck";
+import AlertsManager, { IAlert } from "../AlertsManager";
 
 interface IDeckEditorProps {
   deck?: IDeck,
@@ -17,12 +18,24 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
   const [keyForReordering, setKeyForReordering] = useState("");
   const [flashcards, setFlashcards] = useState<IFlashcard[]>(flashcardsFromProps ?? []);
   const [errors, setErrors] = useState<{ [card: string]: Record<string, string> }>({})
+  const [alerts, setAlerts] = useState<IAlert[]>([]);
+
   const cardRefs = useRef<HTMLDivElement[]>([]);
 
   const saveDeckModalRef = useRef<HTMLDialogElement>(null)
   const deckErrorModalRef = useRef<HTMLDialogElement>(null)
 
-  const { persist: persistFlashcards, clear: clearFlashcards } = useLocalPersistence<IFlashcard[]>({ initialValue: flashcardsFromProps, setter: setFlashcards, key: "flashcards_amaizely" });
+  const { persist: persistFlashcards, clear: clearFlashcards } = useLocalPersistence<IFlashcard[]>({ initialValue: flashcardsFromProps, setter: setFlashcards, key: "flashcards_manual_amaizely", onPersist: onFlashcardsPersisted });
+
+  function onFlashcardsPersisted(cards: IFlashcard[], timestamp: number) {
+    if (cards.length > 0) {
+      setAlerts([{
+        message: `Flashcards have been restored from ${new Date(timestamp).toLocaleString()}`,
+        type: "success",
+        duration: 3000
+      }]);
+    }
+  }
 
   function addDummyFlashcard() {
     setFlashcardData([...flashcards, { title: "", content: "" }], false);
@@ -216,6 +229,8 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
           onCancel={() => saveDeckModalRef.current?.close()}
         />
       </dialog>
+
+      <AlertsManager alerts={alerts} />
     </>
   )
 }
