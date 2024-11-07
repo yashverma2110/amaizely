@@ -1,13 +1,13 @@
 "use client"
 
 import { useRef } from "react";
-import { faBrain, faCompass, faGear, faLayerGroup, faLink, faPenAlt, faPlus, faRightFromBracket, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { usePathname, useRouter } from "next/navigation";
+import { faCompass, faGear, faLayerGroup, faPlus, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { LOGOUT_USER } from "@/services/AuthService";
 import DeckCreatorForm from "../DeckCreaterForm";
+import Image from "next/image";
 
 export default function Sidebar({ className }: { className: string }) {
   const pathname = usePathname();
@@ -44,7 +44,7 @@ export default function Sidebar({ className }: { className: string }) {
   return (
     <div className={`shadow-md p-4 bg-white gap-2 ${className}`}>
       <Link className="btn btn-ghost flex items-center justify-center gap-2 text-xl p-0" href="/deck">
-        <FontAwesomeIcon icon={faBrain} />
+        <Image src="https://res.cloudinary.com/dd2ntmm1w/image/upload/v1731002279/logo_s5wgbq.png" alt="amaizely_logo" width={30} height={30} />
         <p>am<span>(AI)</span>zely</p>
       </Link>
 
