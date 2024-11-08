@@ -9,9 +9,10 @@ import { GET_USER } from "@/services/AuthService"
 import SaveDeckForm from "../SaveDeckForm"
 import AILoadingState from "../ui/AILoadingState"
 import FormErrorMessage from "../ui/FormErrorMessage"
+import { FREE_DECKS } from "@/config/SubscriptionConstants"
 
 interface IFlashcardCreatorProps {
-  variant: 'youtube' | 'website' | 'text' | 'pdf'
+  variant: 'youtube' | 'website' | 'text' | 'pdf';
 }
 export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps) {
   const [flashcards, setFlashcards] = useState<IFlashcard[]>([])
@@ -21,6 +22,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   const [isLoading, setIsLoading] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const [totalDecks, setTotalDecks] = useState(3)
 
   const saveDeckModalRef = useRef<HTMLDialogElement>(null)
 
@@ -28,6 +30,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     GET_USER().then((response) => {
       setIsPageLoading(false)
       if (response.success) {
+        setTotalDecks(response.user?.totalDecks || 3)
         setIsAuthenticated(true)
       }
     }).catch(() => {
@@ -61,10 +64,10 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
   }
 
-  async function handleDeckCreationWithYoutube(videoId: string) {
+  async function handleDeckCreationWithYoutube(videoId: string, deckSize?: number) {
     setYoutubeLink(videoId);
     setIsLoading(true)
-    const response = await GENERATE_FLASHCARDS_FROM_YOUTUBE(videoId)
+    const response = await GENERATE_FLASHCARDS_FROM_YOUTUBE(videoId, deckSize)
     setIsLoading(false)
     if (response.success && response.flashcards) {
       setFlashcards(response.flashcards)
@@ -74,10 +77,10 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     setErrorMessage(response.message)
   }
 
-  async function handleDeckCreationWithWebsite(website: string) {
+  async function handleDeckCreationWithWebsite(website: string, deckSize?: number) {
     setWebsiteLink(website);
     setIsLoading(true)
-    const response = await GENERATE_FLASHCARDS_FROM_WEBSITE(website)
+    const response = await GENERATE_FLASHCARDS_FROM_WEBSITE(website, deckSize)
     setIsLoading(false)
     if (response.success && response.flashcards) {
       setFlashcards(response.flashcards)
@@ -87,9 +90,9 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     setErrorMessage(response.message)
   }
 
-  async function handleDeckCreationWithText(content: string) {
+  async function handleDeckCreationWithText(content: string, deckSize?: number) {
     setIsLoading(true)
-    const response = await GENERATE_FLASHCARDS_FROM_TEXT(content)
+    const response = await GENERATE_FLASHCARDS_FROM_TEXT(content, deckSize)
     setIsLoading(false)
     if (response.success && response.flashcards) {
       setFlashcards(response.flashcards)
@@ -99,9 +102,9 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     setErrorMessage(response.message)
   }
 
-  async function handleDeckCreationWithPdf(file: File) {
+  async function handleDeckCreationWithPdf(file: File, deckSize?: number) {
     setIsLoading(true)
-    const response = await GENERATE_FLASHCARDS_FROM_PDF(file)
+    const response = await GENERATE_FLASHCARDS_FROM_PDF(file, deckSize)
     setIsLoading(false)
 
     if (response.success && response.flashcards) {
@@ -113,7 +116,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     setIsLoading(false)
   }
 
-  async function handleDeckCreation(input?: string, file?: File) {
+  async function handleDeckCreation(input?: string, file?: File, deckSize?: number) {
     setErrorMessage("")
     if (isLoading) {
       return;
@@ -122,18 +125,18 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     if (input) {
       switch (variant) {
         case 'youtube':
-          return handleDeckCreationWithYoutube(input)
+          return handleDeckCreationWithYoutube(input, deckSize)
         case 'website':
-          return handleDeckCreationWithWebsite(input)
+          return handleDeckCreationWithWebsite(input, deckSize)
         case 'text':
-          return handleDeckCreationWithText(input)
+          return handleDeckCreationWithText(input, deckSize)
       }
 
       return;
     }
 
     if (file) {
-      return handleDeckCreationWithPdf(file)
+      return handleDeckCreationWithPdf(file, deckSize)
     }
   }
 
@@ -152,7 +155,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
         <div className="card-body">
           <h2 className="card-title">{getCardTitle()}</h2>
           <p>{getCardBody()}</p>
-          <FlashcardForm variant={variant} onSubmit={handleDeckCreation} />
+          <FlashcardForm variant={variant} hasSubscription={totalDecks > FREE_DECKS} onSubmit={handleDeckCreation} />
           {errorMessage && <FormErrorMessage message={errorMessage} />}
         </div>
       </div>

@@ -3,17 +3,46 @@
 import { extractAlphanumeric } from '@/utils/StringUtils';
 import { extractYoutubeId, isValidWebsiteURL, isValidYouTubeUrl } from '@/utils/UrlUtils';
 import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react'
 import FormErrorMessage from '../ui/FormErrorMessage';
+import { FREE_FLASHCARDS_PER_DECK, MAX_FLASHCARDS_PER_DECK } from '@/config/SubscriptionConstants';
+import { MIN_FLASHCARDS_PER_DECK } from '@/config/SubscriptionConstants';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUnlock } from '@fortawesome/free-solid-svg-icons';
 
 interface FlashcardFormProps {
   variant: 'youtube' | 'website' | 'text' | 'pdf'
-  onSubmit: (youtubeLink?: string, file?: File) => Promise<void>
+  hasSubscription: boolean;
+  onSubmit: (youtubeLink?: string, file?: File, deckSize?: number) => Promise<void>
 }
 
-export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps) {
+export default function FlashcardForm({ variant, onSubmit, hasSubscription }: FlashcardFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [flashcardCount, setFlashcardCount] = useState(5);
+
+  const router = useRouter();
+
+  function shouldShowUpsell() {
+    if (!hasSubscription) {
+      return flashcardCount > FREE_FLASHCARDS_PER_DECK;
+    }
+
+    return false;
+  }
+
+  function getButtonText() {
+    if (shouldShowUpsell()) {
+      return "Purchase to unlock"
+    }
+
+    if (isLoading) {
+      return "Creating your deck..."
+    }
+
+    return "Create Deck"
+  }
 
   async function handleValidation(content: string, pdf?: File) {
     if (variant === 'pdf') {
@@ -134,6 +163,12 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (shouldShowUpsell()) {
+      router.push("/purchase?intent=card_count")
+      return;
+    }
+
+
     if (isLoading) {
       return;
     }
@@ -149,7 +184,7 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
       return
     }
 
-    await onSubmit(content, file)
+    await onSubmit(content, file, flashcardCount)
     setIsLoading(false)
   }
 
@@ -201,10 +236,29 @@ export default function FlashcardForm({ variant, onSubmit }: FlashcardFormProps)
         <div className="mt-2">
           {errorMessage && <FormErrorMessage message={errorMessage} size="sm" align="left" />}
         </div>
+
+        <hr className="my-2 border-neutral-200" />
+
+        <div className="flex flex-col gap-1">
+          <p className="text-sm">Generate <strong>{flashcardCount}</strong> flashcards</p>
+          <div className="flex items-center gap-2">
+            <span>{MIN_FLASHCARDS_PER_DECK}</span>
+            <input
+              type="range"
+              min={MIN_FLASHCARDS_PER_DECK}
+              max={MAX_FLASHCARDS_PER_DECK}
+              value={flashcardCount}
+              className="range range-xs"
+              onChange={(e) => setFlashcardCount(parseInt(e.target.value))}
+            />
+            <span>{MAX_FLASHCARDS_PER_DECK}</span>
+          </div>
+        </div>
       </div>
-      <button className="btn btn-primary" type="submit">
+      <button className={`btn ${shouldShowUpsell() ? 'btn-warning' : 'btn-primary'}`} type="submit">
+        {getButtonText()}
         {
-          isLoading ? <span>Creating your deck...</span> : <span>Create Deck</span>
+          shouldShowUpsell() && <FontAwesomeIcon icon={faUnlock} className="h-4 w-4" />
         }
       </button>
     </form>

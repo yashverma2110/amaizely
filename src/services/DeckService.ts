@@ -55,11 +55,11 @@ export interface IFlashcard {
   content: string;
   hidden?: boolean;
 }
-export async function GENERATE_FLASHCARDS_FROM_YOUTUBE(videoId: string) {
+export async function GENERATE_FLASHCARDS_FROM_YOUTUBE(videoId: string, deckSize: number = 5) {
   try {
     const response = await AxiosInstance.post(`/flashcards/generate/transcript/${videoId}`, {
       options: {
-        deckSize: 5,
+        deckSize,
       }
     })
 
@@ -83,12 +83,12 @@ export async function GENERATE_FLASHCARDS_FROM_YOUTUBE(videoId: string) {
   }
 }
 
-export async function GENERATE_FLASHCARDS_FROM_WEBSITE(website: string) {
+export async function GENERATE_FLASHCARDS_FROM_WEBSITE(website: string, deckSize: number = 5) {
   try {
     const response = await AxiosInstance.post(`/flashcards/generate/website`, {
       website,
       options: {
-        deckSize: 5,
+        deckSize,
       }
     })
 
@@ -112,12 +112,12 @@ export async function GENERATE_FLASHCARDS_FROM_WEBSITE(website: string) {
   }
 }
 
-export async function GENERATE_FLASHCARDS_FROM_TEXT(content: string) {
+export async function GENERATE_FLASHCARDS_FROM_TEXT(content: string, deckSize: number = 5) {
   try {
     const response = await AxiosInstance.post(`/flashcards/generate/text`, {
       content,
       options: {
-        deckSize: 5,
+        deckSize,
       }
     })
 
@@ -209,10 +209,11 @@ export async function CREATE_DECK_WITH_FLASHCARD_PDF(payload: {
   }
 }
 
-export async function GENERATE_FLASHCARDS_FROM_PDF(file: File) {
+export async function GENERATE_FLASHCARDS_FROM_PDF(file: File, deckSize: number = 5) {
   try {
     const formData = new FormData();
     formData.append('pdf', file);
+    formData.append('options', JSON.stringify({ deckSize }));
 
     const response = await AxiosInstance.post(`/flashcards/generate/pdf`, formData, {
       headers: {
