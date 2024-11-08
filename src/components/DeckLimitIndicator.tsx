@@ -10,6 +10,10 @@ export default async function DeckLimitIndicator({ current, total }: IDeckLimitI
       return 'progress-primary'
     }
 
+    if (current / total > 0.6) {
+      return 'progress-warning'
+    }
+
     if (current / total > 0.74) {
       return 'progress-error'
     }

@@ -14,6 +14,7 @@ export default function DeckCreatorButton() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [totalDecks, setTotalDecks] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
   const [decksAllocated, setDecksAllocated] = useState(0)
 
   useEffect(() => {
@@ -23,6 +24,8 @@ export default function DeckCreatorButton() {
       }
       setTotalDecks(totalDecksResponse.count)
       setDecksAllocated(userResponse.user?.totalDecks || 0)
+    }).finally(() => {
+      setIsLoading(false)
     })
   }, [])
 
@@ -35,6 +38,19 @@ export default function DeckCreatorButton() {
   function handleClose() {
     router.replace('/deck');
     deckModal.current?.close();
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="skeleton bg-gray-300 h-12 rounded w-full drop-shadow"></div>
+        <div className="flex justify-between">
+          <div className="skeleton bg-gray-300 h-4 w-10 drop-shadow"></div>
+          <div className="skeleton bg-gray-300 h-4 w-24 drop-shadow"></div>
+        </div>
+        <div className="skeleton bg-gray-300 h-4 w-full drop-shadow"></div>
+      </div>
+    )
   }
 
   return (
