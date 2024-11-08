@@ -1,5 +1,5 @@
 export const AI_GENERATION_PER_DECK = 4;
-export const PRICE_PER_DECK = 4;
+export const PRICE_PER_DECK = 5;
 export const DISCOUNT_PER_DECK = 0.2;
 export const MIN_FLASHCARDS_PER_DECK = 3;
 export const MAX_FLASHCARDS_PER_DECK = 20;
