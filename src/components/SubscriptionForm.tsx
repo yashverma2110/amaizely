@@ -1,16 +1,19 @@
 "use client"
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { COMPLETE_ORDER, CREATE_ORDER } from "@/services/PaymentService"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCheckCircle, faInfoCircle, faMinus, faPlus, faSpinner, faUnlock } from "@fortawesome/free-solid-svg-icons";
-import { MAX_DECKS, MIN_DECKS, PRICE_PER_DECK, AI_GENERATION_PER_DECK, DISCOUNT_PER_DECK, DECK_JUMPS } from "@/config/SubscriptionConstants";
+import { MAX_DECKS, MIN_DECKS, PRICE_PER_DECK, AI_GENERATION_PER_DECK, DISCOUNT_PER_DECK, DECK_JUMPS, UPSELL_POINTS } from "@/config/SubscriptionConstants";
 
 export default function SubscriptionForm() {
   const [isLoading, setIsLoading] = useState(true)
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'confirming' | 'init'>('init')
   const [currency, _setCurrency] = useState<'USD' | 'INR'>('INR')
   const [totalDecks, setTotalDecks] = useState(MIN_DECKS + 2 * DECK_JUMPS)
+
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -50,6 +53,15 @@ export default function SubscriptionForm() {
 
   function getDiscountedPrice() {
     return PRICE_PER_DECK * totalDecks - (PRICE_PER_DECK * totalDecks * DISCOUNT_PER_DECK)
+  }
+
+  function getSortedUpsellPoints() {
+    const intent = searchParams.get('intent');
+    if (!intent) {
+      return UPSELL_POINTS
+    }
+
+    return UPSELL_POINTS.sort((a, b) => a.intent === intent ? -1 : b.intent === intent ? 1 : 0)
   }
 
   function getButtonText() {
@@ -135,7 +147,13 @@ export default function SubscriptionForm() {
   return (
     <div className="flex flex-col gap-4">
       <ul className="list-disc list-outside">
-        <li>Ability to create maximum 20 flashcards per deck</li>
+        {
+          getSortedUpsellPoints().map((point, index) => (
+            <li key={index} className={`${index === 0 ? 'italic font-semibold text-yellow-500' : ''}`}>
+              {point.message} {searchParams.get('intent') === point.intent && <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />}
+            </li>
+          ))
+        }
         <li>Create or generate <strong>{totalDecks}</strong> more decks</li>
         <li>Use AI generation <strong>{AI_GENERATION_PER_DECK * totalDecks}</strong> times</li>
         <li>Access to more incoming AI features</li>
