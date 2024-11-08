@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { setHeaders } from "@/config/AxiosService";
 import { GET_USER } from "@/services/AuthService";
 import UserDetailsForm from "@/components/UserDetailsForm";
-import GenerationSettings from "@/components/GenerationSettings";
 
 export default async function SettingsPage() {
   const cookieStore = cookies();

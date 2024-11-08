@@ -39,6 +39,13 @@ export async function REGISTER_USER({ firstName, lastName, email, password }: an
     }
   } catch (error) {
     const err = error as AxiosError;
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
 
     return {
       success: false,
@@ -58,6 +65,13 @@ export async function GET_USER() {
     }
   } catch (error) {
     const err = error as AxiosError;
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
 
     return {
       success: false,

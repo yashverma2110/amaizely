@@ -343,3 +343,27 @@ export async function DELETE_DECK_WITH_ID(deckId: string) {
     }
   }
 }
+
+export async function GET_TOTAL_DECKS() {
+  try {
+    const response = await AxiosInstance.get("/deck/count")
+
+    return {
+      success: true,
+      count: response.data.deckCount
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}

@@ -29,8 +29,9 @@ export default function DeckDeletion({ deckId, deckName }: { deckId: string, dec
 
   return (
     <>
-      <button className="btn btn-xs btn-error z-10" onClick={handleDeletionConfirmation}>
-        <FontAwesomeIcon icon={faTrash} className="h-3 w-3 text-white" />
+      <button className="btn btn-xs btn-error z-10 text-white" onClick={handleDeletionConfirmation}>
+        <FontAwesomeIcon icon={faTrash} className="h-3 w-3" />
+        <span className="hidden md:block">Delete</span>
       </button>
 
       <dialog ref={deckDeletionModal} className="modal">

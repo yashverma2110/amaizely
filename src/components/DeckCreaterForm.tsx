@@ -1,8 +1,15 @@
 import { faBrain, faFilePdf, faLink, faPenAlt, faPlus, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import ProgressBar from "./ui/ProgressBar";
 
-export default function DeckCreatorForm({ onCancel }: { onCancel: () => void }) {
+interface IDeckCreatorFormProps {
+  current: number
+  total: number
+  onCancel: () => void
+}
+
+export default function DeckCreatorForm({ current, total, onCancel }: IDeckCreatorFormProps) {
   const AI_CREATE_OPTIONS = [
     {
       icon: faLink,
@@ -36,10 +43,20 @@ export default function DeckCreatorForm({ onCancel }: { onCancel: () => void }) 
       <form method="dialog">
         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={onCancel}>✕</button>
       </form>
-      <h3 className="font-bold text-lg">Choose a mode to create</h3>
+      <h3 className="font-bold text-lg">Choose a mode to create</h3>  
+      <hr className="my-2 border-neutral-200" />
+
+      {
+        current / total > 0.5 && (
+          <div className="flex flex-col gap-1 mt-2">
+            <p className="text-xs">You have created <strong>{current}</strong> out of <strong>{total}</strong> decks</p>
+            <ProgressBar current={current} total={total} />
+          </div>
+        )
+      }
 
       <h4 className="text-lg text-center p-4">AI-powered <FontAwesomeIcon icon={faBrain} className="h-4 w-4" /></h4>
-      <section className="ai-create-options grid grid-cols-2 gap-2">
+      <section className="ai-create-options grid grid-cols-2 gap-4">
         {
           AI_CREATE_OPTIONS.map((option) => (
             <Link

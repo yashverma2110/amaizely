@@ -1,18 +1,17 @@
 "use client"
 
-import { useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { faCompass, faGear, faLayerGroup, faPlus, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faCompass, faGear, faLayerGroup, faRightFromBracket, faBagShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { LOGOUT_USER } from "@/services/AuthService";
-import DeckCreatorForm from "../DeckCreaterForm";
 import Image from "next/image";
+import DeckCreatorButton from "../DeckCreatorButton";
+import { Suspense } from "react";
 
 export default function Sidebar({ className }: { className: string }) {
   const pathname = usePathname();
   const router = useRouter()
-  const deckModal = useRef<HTMLDialogElement>(null);
 
   function getNavIconClass(path: string) {
     switch (pathname) {
@@ -32,10 +31,6 @@ export default function Sidebar({ className }: { className: string }) {
     }
   }
 
-  function handleCreateDeck() {
-    deckModal.current?.showModal();
-  }
-
   async function handleLogout() {
     LOGOUT_USER()
     router.push('/login')
@@ -48,12 +43,11 @@ export default function Sidebar({ className }: { className: string }) {
         <p>am<span>(AI)</span>zely</p>
       </Link>
 
-      <button className="btn btn-active btn-primary w-full" onClick={handleCreateDeck}>
-        <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
-        Create Deck
-      </button>
+      <Suspense fallback={<div className="skeleton h-12 w-full"></div>}>
+        <DeckCreatorButton />
+      </Suspense>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mt-4">
         <Link href="/deck" className={getNavIconClass("/deck")}>
           <FontAwesomeIcon icon={faLayerGroup} className="h-4 w-4" />
           <span className={getNavTextClass("/deck")}>My Decks</span>
@@ -66,15 +60,15 @@ export default function Sidebar({ className }: { className: string }) {
           <FontAwesomeIcon icon={faGear} className="h-4 w-4" />
           <span className={getNavTextClass("/settings")}>Settings</span>
         </Link>
+        <Link href="/purchase" className={getNavIconClass("/purchase")}>
+          <FontAwesomeIcon icon={faBagShopping} className="h-4 w-4" />
+          <span className={getNavTextClass("/purchase")}>Purchase</span>
+        </Link>
         <button className={getNavIconClass("/logout")} onClick={handleLogout}>
           <FontAwesomeIcon icon={faRightFromBracket} className="h-4 w-4" />
           <span className={getNavTextClass("/logout")}>Logout</span>
         </button>
       </div>
-
-      <dialog ref={deckModal} id="deck-creator-modal" className="modal">
-        <DeckCreatorForm onCancel={() => deckModal.current?.close()} />
-      </dialog>
     </div>
   )
 }
