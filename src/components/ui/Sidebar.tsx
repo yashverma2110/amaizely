@@ -1,7 +1,7 @@
 "use client"
 
 import { usePathname, useRouter } from "next/navigation";
-import { faCompass, faGear, faLayerGroup, faRightFromBracket, faBagShopping } from "@fortawesome/free-solid-svg-icons";
+import { faCompass, faGear, faLayerGroup, faRightFromBracket, faBagShopping, faMessage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { LOGOUT_USER } from "@/services/AuthService";
@@ -68,6 +68,10 @@ export default function Sidebar({ className }: { className: string }) {
           <FontAwesomeIcon icon={faRightFromBracket} className="h-4 w-4" />
           <span className={getNavTextClass("/logout")}>Logout</span>
         </button>
+        <a href="https://737x5ktq3ep.typeform.com/to/OyhGWmWM" className={getNavIconClass("/feedback")} target="_blank">
+          <FontAwesomeIcon icon={faMessage} className="h-4 w-4" />
+          <span className={getNavTextClass("/feedback")}>Feedback</span>
+        </a>
       </div>
     </div>
   )

@@ -2,6 +2,8 @@ import Image from "next/image";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMessage } from "@fortawesome/free-solid-svg-icons";
 
 export default function AppHeader({ className }: { className: string }) {
   const cookieStore = cookies();
@@ -17,11 +19,16 @@ export default function AppHeader({ className }: { className: string }) {
           <p>am<span>(AI)</span>zely</p>
         </Link>
 
-        {
-          isLoggedIn() && (
-            <LogoutButton />
-          )
-        }
+        <div className="flex items-center">
+          <a href="https://737x5ktq3ep.typeform.com/to/OyhGWmWM" className="btn btn-ghost" target="_blank">
+            <FontAwesomeIcon icon={faMessage} className="h-4 w-4" />
+          </a>
+          {
+            isLoggedIn() && (
+              <LogoutButton />
+            )
+          }
+        </div>
       </div>
     </div>
   )
