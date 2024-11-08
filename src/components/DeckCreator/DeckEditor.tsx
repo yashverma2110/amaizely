@@ -1,13 +1,16 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { IFlashcard } from "@/services/DeckService";
+import { useRouter } from "next/navigation";
 import useLocalPersistence from "@/app/hooks/useLocalPersistence";
 import SaveDeckForm from "@/components/SaveDeckForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faArrowUp, faFloppyDisk, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowUp, faFloppyDisk, faInfoCircle, faPlus, faTrash, faUnlock } from "@fortawesome/free-solid-svg-icons";
 import RichTextEditor from "../RichTextEditor";
 import { removeHtmlTags } from "@/utils/StringUtils";
 import { IDeck } from "@/types/IDeck";
 import AlertsManager, { IAlert } from "../AlertsManager";
+import { GET_USER } from "@/services/AuthService";
+import { FREE_DECKS, FREE_FLASHCARDS_PER_DECK } from "@/config/SubscriptionConstants";
 
 interface IDeckEditorProps {
   deck?: IDeck,
@@ -15,10 +18,15 @@ interface IDeckEditorProps {
   mode: "create" | "edit";
 }
 export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode }: IDeckEditorProps) {
+  const [isPageLoading, setIsPageLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [totalDecks, setTotalDecks] = useState(FREE_DECKS)
   const [keyForReordering, setKeyForReordering] = useState("");
   const [flashcards, setFlashcards] = useState<IFlashcard[]>(flashcardsFromProps ?? []);
   const [errors, setErrors] = useState<{ [card: string]: Record<string, string> }>({})
   const [alerts, setAlerts] = useState<IAlert[]>([]);
+
+  const router = useRouter();
 
   const cardRefs = useRef<HTMLDivElement[]>([]);
 
@@ -26,6 +34,26 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
   const deckErrorModalRef = useRef<HTMLDialogElement>(null)
 
   const { persist: persistFlashcards, clear: clearFlashcards } = useLocalPersistence<IFlashcard[]>({ initialValue: flashcardsFromProps, setter: setFlashcards, key: "flashcards_manual_amaizely", onPersist: onFlashcardsPersisted });
+
+  useEffect(() => {
+    GET_USER().then((response) => {
+      setIsPageLoading(false)
+      if (response.success) {
+        setTotalDecks(response.user?.totalDecks || FREE_DECKS)
+        setIsAuthenticated(true)
+      }
+    }).catch(() => {
+      setIsPageLoading(false)
+    })
+  }, [])
+
+  function shouldShowUpsell() {
+    if (totalDecks > FREE_DECKS) {
+      return false;
+    }
+
+    return flashcardsToSave().length > FREE_FLASHCARDS_PER_DECK;
+  }
 
   function onFlashcardsPersisted(cards: IFlashcard[], timestamp: number) {
     if (cards.length > 0) {
@@ -122,6 +150,11 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
   }
 
   function handleSaveIntent() {
+    if (shouldShowUpsell()) {
+      router.push("/purchase?intent=manual_card_count")
+      return;
+    }
+
     if (flashcardsToSave().length === 0) {
       deckErrorModalRef.current?.showModal();
       return;
@@ -137,14 +170,19 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
   return (
     <>
       <div className="create-deck-page flex flex-col gap-4 justify-center p-4">
-        <button className="btn btn-active btn-warning w-full" onClick={handleSaveIntent}>
-          <FontAwesomeIcon icon={faFloppyDisk} size="2x" className="h-4 w-4" />
-          Save deck
-        </button>
-        <button className="btn btn-active btn-primary w-full" onClick={addDummyFlashcard}>
-          <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
-          Add flashcard
-        </button>
+        <div className="flex flex-col">
+          <button className="btn btn-active btn-warning w-full" onClick={handleSaveIntent}>
+            <FontAwesomeIcon icon={shouldShowUpsell() ? faUnlock : faFloppyDisk} size="2x" className="h-4 w-4" />
+            {shouldShowUpsell() ? "Unlock to save" : "Save deck"}
+          </button>
+          <p className="text-xs text-center md:text-base text-error mt-1 font-semibold">
+            <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" /> You can only save up to {FREE_FLASHCARDS_PER_DECK} flashcards for free
+          </p>
+          <button className="btn btn-active btn-primary w-full mt-2" onClick={addDummyFlashcard}>
+            <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
+            Add flashcard
+          </button>
+        </div>
 
         {flashcards.map((flashcard, index) => (
           <div key={index + keyForReordering} ref={el => {
@@ -191,16 +229,19 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
 
         {
           flashcards.length > 1 && (
-            <>
+            <div className="flex flex-col">
               <button className="btn btn-active btn-primary w-full" onClick={addDummyFlashcard}>
                 <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
                 Add flashcard
               </button>
-              <button className="btn btn-active btn-warning w-full" onClick={handleSaveIntent}>
-                <FontAwesomeIcon icon={faFloppyDisk} size="2x" className="h-4 w-4" />
-                Save deck
+              <p className="text-xs text-center md:text-base text-error font-semibold mt-1">
+                <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" /> You can only save up to {FREE_FLASHCARDS_PER_DECK} flashcards for free
+              </p>
+              <button className="btn btn-active btn-warning w-full mt-2" onClick={handleSaveIntent}>
+                <FontAwesomeIcon icon={shouldShowUpsell() ? faUnlock : faFloppyDisk} size="2x" className="h-4 w-4" />
+                {shouldShowUpsell() ? "Unlock to save" : "Save deck"}
               </button>
-            </>
+            </div>
           )
         }
       </div>
