@@ -126,7 +126,7 @@ export default function SaveDeckForm({ flashcards, deck, mode, onSave, onCancel 
           <div className="label">
             <span className="label-text">Description</span>
           </div>
-          <textarea defaultValue={deck?.description} className="textarea textarea-bordered h-24" name="deck-description" placeholder="Bio"></textarea>
+          <textarea defaultValue={deck?.description} className="textarea text-base textarea-bordered h-24" name="deck-description" placeholder="Bio"></textarea>
         </label>
         {formErrors['deck-description'] && <p className="text-red-500 text-sm mt-1">{formErrors['deck-description']}</p>}
 
