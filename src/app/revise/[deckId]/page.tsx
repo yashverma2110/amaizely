@@ -28,7 +28,7 @@ export default async function DeckRevisionPage({ params, searchParams }: { param
 
 
   return (
-    <div className="deck-revision-page h-[calc(100vh-8rem)] grid grid-rows-12">
+    <div className="deck-revision-page h-[calc(100vh-8rem)] md:h-full grid grid-rows-12">
       <div className="navbar-container row-span-1 md:p-2" >
         <div className="h-full bg-base-100 flex items-center justify-center text-center drop-shadow md:rounded-lg">
           <h1 className="text-xl font-semibold">{response.deck.title}</h1>
