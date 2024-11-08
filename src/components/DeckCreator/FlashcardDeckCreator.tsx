@@ -19,7 +19,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   const [websiteLink, setWebsiteLink] = useState<string>("")
   const [youtubeLink, setYoutubeLink] = useState<string>("")
   const [isPageLoading, setIsPageLoading] = useState(true)
-  const [statusCode, setStatusCode] = useState<number | null>(null)
+  const [statusCode, setStatusCode] = useState<number>()
   const [isLoading, setIsLoading] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
@@ -76,6 +76,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
 
     setErrorMessage(response.message)
+    setStatusCode(response.status)
   }
 
   async function handleDeckCreationWithWebsite(website: string, deckSize?: number) {
@@ -101,6 +102,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
 
     setErrorMessage(response.message)
+    setStatusCode(response.status)
   }
 
   async function handleDeckCreationWithPdf(file: File, deckSize?: number) {
@@ -114,6 +116,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
 
     setErrorMessage(response.message)
+    setStatusCode(response.status)
     setIsLoading(false)
   }
 
@@ -158,11 +161,15 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
           <p>{getCardBody()}</p>
           <FlashcardForm variant={variant} hasSubscription={totalDecks > FREE_DECKS} onSubmit={handleDeckCreation} />
           {errorMessage && <FormErrorMessage message={errorMessage} />}
-          <Link href="/purchase?intent=ai_generation">
-            <button className="btn btn-warning w-full">
-              Purchase <FontAwesomeIcon icon={faUnlock} className="h-5 w-5" />
-            </button>
-          </Link>
+          {
+            statusCode === 402 && (
+              <Link href="/purchase?intent=ai_generation">
+                <button className="btn btn-warning w-full">
+                  Purchase <FontAwesomeIcon icon={faUnlock} className="h-5 w-5" />
+                </button>
+              </Link>
+            )
+          }
         </div>
       </div>
 
@@ -176,11 +183,11 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
         flashcards.length > 0 && (
           <section className="flashcards-container w-full space-y-4 drop-shadow-lg">
             <div className="flashcards-toolbar">
-              {isAuthenticated ? 
+              {isAuthenticated ?
                 <button className="btn btn-warning w-full" onClick={() => saveDeckModalRef.current?.showModal()}>
-                <FontAwesomeIcon icon={faFloppyDisk} className="h-5 w-5" />
+                  <FontAwesomeIcon icon={faFloppyDisk} className="h-5 w-5" />
                   {isAuthenticated ? 'Save' : 'Login to save'}
-              </button>
+                </button>
                 :
                 <Link href="/login" className="btn btn-warning w-full">
                   <FontAwesomeIcon icon={faFloppyDisk} className="h-5 w-5" />
