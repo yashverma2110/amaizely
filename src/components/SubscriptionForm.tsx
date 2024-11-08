@@ -73,6 +73,14 @@ export default function SubscriptionForm() {
     }
   }
 
+  function getMessage(message: string) {
+    if (searchParams.get('intent') === 'ai_generation') {
+      return message.replace(':1', (AI_GENERATION_PER_DECK * totalDecks).toString())
+    }
+
+    return message
+  }
+
   async function handleSubscriptionIntent() {
     if (status === 'loading' || status === 'confirming') {
       return
@@ -148,14 +156,13 @@ export default function SubscriptionForm() {
     <div className="flex flex-col gap-4">
       <ul className="list-disc list-outside">
         {
-          getSortedUpsellPoints().map((point, index) => (
-            <li key={index} className={`${index === 0 ? 'italic font-semibold text-yellow-500' : ''}`}>
-              {point.message} {searchParams.get('intent') === point.intent && <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />}
+          getSortedUpsellPoints().map((point) => (
+            <li key={point.message} className={`${searchParams.get('intent') === point.intent ? 'italic font-semibold text-yellow-500' : ''}`}>
+              {getMessage(point.message)} {searchParams.get('intent') === point.intent && <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />}
             </li>
           ))
         }
         <li>Create or generate <strong>{totalDecks}</strong> more decks</li>
-        <li>Use AI generation <strong>{AI_GENERATION_PER_DECK * totalDecks}</strong> times</li>
         <li>Access to more incoming AI features</li>
       </ul>
 

@@ -18,4 +18,8 @@ export const UPSELL_POINTS = [
     intent: "card_count",
     message: `Generate upto ${MAX_FLASHCARDS_PER_DECK} flashcards per deck`
   },
+  {
+    intent: "ai_generation",
+    message: "Use AI generation upto :1 times"
+  }
 ]

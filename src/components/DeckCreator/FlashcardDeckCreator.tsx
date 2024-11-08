@@ -3,7 +3,7 @@ import { GENERATE_FLASHCARDS_FROM_PDF, GENERATE_FLASHCARDS_FROM_TEXT, GENERATE_F
 import FlashcardForm from './FlashcardForm'
 import { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons"
+import { faFloppyDisk, faUnlock } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
 import { GET_USER } from "@/services/AuthService"
 import SaveDeckForm from "../SaveDeckForm"
@@ -19,6 +19,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   const [websiteLink, setWebsiteLink] = useState<string>("")
   const [youtubeLink, setYoutubeLink] = useState<string>("")
   const [isPageLoading, setIsPageLoading] = useState(true)
+  const [statusCode, setStatusCode] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
@@ -157,6 +158,11 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
           <p>{getCardBody()}</p>
           <FlashcardForm variant={variant} hasSubscription={totalDecks > FREE_DECKS} onSubmit={handleDeckCreation} />
           {errorMessage && <FormErrorMessage message={errorMessage} />}
+          <Link href="/purchase?intent=ai_generation">
+            <button className="btn btn-warning w-full">
+              Purchase <FontAwesomeIcon icon={faUnlock} className="h-5 w-5" />
+            </button>
+          </Link>
         </div>
       </div>
 
