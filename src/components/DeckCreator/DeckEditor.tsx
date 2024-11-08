@@ -175,9 +175,13 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
             <FontAwesomeIcon icon={shouldShowUpsell() ? faUnlock : faFloppyDisk} size="2x" className="h-4 w-4" />
             {shouldShowUpsell() ? "Unlock to save" : "Save deck"}
           </button>
-          <p className="text-xs text-center md:text-base text-error mt-1 font-semibold">
-            <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" /> You can only save up to {FREE_FLASHCARDS_PER_DECK} flashcards for free
-          </p>
+          {
+            shouldShowUpsell() && (
+              <p className="flex items-center gap-1 text-xs justify-center md:text-base text-error mt-1 font-semibold">
+                <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" /> You can only save up to {FREE_FLASHCARDS_PER_DECK} flashcards for free
+              </p>
+            )
+          }
           <button className="btn btn-active btn-primary w-full mt-2" onClick={addDummyFlashcard}>
             <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
             Add flashcard
@@ -234,9 +238,13 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
                 <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
                 Add flashcard
               </button>
-              <p className="text-xs text-center md:text-base text-error font-semibold mt-1">
-                <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" /> You can only save up to {FREE_FLASHCARDS_PER_DECK} flashcards for free
-              </p>
+              {
+                shouldShowUpsell() && (
+                  <p className="flex items-center gap-1 text-xs justify-center md:text-base text-error mt-1 font-semibold">
+                    <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" /> You can only save up to {FREE_FLASHCARDS_PER_DECK} flashcards for free
+                  </p>
+                )
+              }
               <button className="btn btn-active btn-warning w-full mt-2" onClick={handleSaveIntent}>
                 <FontAwesomeIcon icon={shouldShowUpsell() ? faUnlock : faFloppyDisk} size="2x" className="h-4 w-4" />
                 {shouldShowUpsell() ? "Unlock to save" : "Save deck"}
