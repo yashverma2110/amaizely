@@ -41,7 +41,7 @@ export default async function RevisePage() {
   }
 
   return (
-    <div className="revision-page h-full">
+    <div className="revision-page h-[calc(100vh-8rem)]">
       <FlashcardContainer flashcards={response.flashcards} />
     </div>
   );

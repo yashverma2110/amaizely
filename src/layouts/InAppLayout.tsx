@@ -17,8 +17,6 @@ export default function InAppLayout({
       <section className="content-container col-span-12 row-span-10 md:row-span-12 grid grid-rows-12 md:col-span-9">
         <div className="row-span-12 z-10 overflow-y-auto shadow-inner">
           {children}
-        {/* Placeholder to offset the bottom navigation */}
-          <BottomNavigation className="pointer-events-none opacity-0 overflow-hidden md:hidden" />
         </div>
       </section>
 
