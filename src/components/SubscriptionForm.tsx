@@ -8,7 +8,7 @@ import { faCheck, faCheckCircle, faInfoCircle, faMinus, faPlus, faSpinner, faUnl
 import { MAX_DECKS, MIN_DECKS, PRICE_PER_DECK, AI_GENERATION_PER_DECK, DISCOUNT_PER_DECK, DECK_JUMPS, UPSELL_POINTS } from "@/config/SubscriptionConstants";
 import { GET_COUNTRY } from "@/services/AuthService";
 
-export default function SubscriptionForm() {
+export default function SubscriptionForm({ country }: { country?: string }) {
   const [isLoading, setIsLoading] = useState(true)
   const [isCountryLoading, setIsCountryLoading] = useState(true)
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'confirming' | 'init'>('init')
@@ -18,6 +18,12 @@ export default function SubscriptionForm() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
+    if (country) {
+      setCurrency(country === 'IN' ? 'INR' : 'USD')
+      return
+    }
+
+    // in case user's country is not set, we will try to get it from ip address
     GET_COUNTRY().then((response) => {
       setCurrency(response.country === 'US' ? 'USD' : 'INR')
     }).finally(() => {

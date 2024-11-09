@@ -41,7 +41,7 @@ export default async function SubscriptionPage() {
           <h1 className="card-title">Buy decks & unlock</h1>
 
           <Suspense fallback={<div className="skeleton rounded-lg bg-gray-300 h-80 w-full drop-shadow"></div>}>
-            <SubscriptionForm />
+            <SubscriptionForm country={userResponse.country} />
           </Suspense>
         </div>
       </div>

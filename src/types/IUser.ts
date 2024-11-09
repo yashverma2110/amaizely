@@ -8,6 +8,7 @@ interface IUser {
   totalDecks: number;
   updatedAt: string;
   profileImage: string | null;
+  country: string | null;
   google: {
     profileId: string;
     displayName: string;

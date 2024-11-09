@@ -24,13 +24,14 @@ export async function LOGIN_USER({ email, password }: any) {
   }
 }
 
-export async function REGISTER_USER({ firstName, lastName, email, password }: any) {
+export async function REGISTER_USER({ firstName, lastName, email, password, country }: any) {
   try {
     const response = await AxiosInstance.post("/auth/signup", {
       firstName,
       lastName,
       email,
-      password
+      password,
+      country
     });
 
     return {

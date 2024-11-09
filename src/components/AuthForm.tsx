@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { REGISTER_USER, LOGIN_USER } from "@/services/AuthService";
+import { REGISTER_USER, LOGIN_USER, GET_COUNTRY } from "@/services/AuthService";
 import GoogleIcon from "@/components/ui/GoogleIcon";
 import { isProduction } from "@/utils/EnvUtils";
 import BaseUrl from "@/constants/BaseUrl";
@@ -20,6 +20,16 @@ export function AuthForm({ type, className }: IAuthFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
   const [errorType, setErrorType] = useState<"duplicate" | "invalid" | "not_found" | "generic" | "none">("none")
+  const [country, setCountry] = useState<string>()
+  const [isCountryLoading, setIsCountryLoading] = useState(true)
+
+  useEffect(() => {
+    GET_COUNTRY().then((response) => {
+      setCountry(response.country)
+    }).finally(() => {
+      setIsCountryLoading(false)
+    })
+  }, [])
 
   const query = useSearchParams();
   const router = useRouter();
@@ -138,12 +148,22 @@ export function AuthForm({ type, className }: IAuthFormProps) {
   function handleGoogleSSO() {
     const BASE_URL = isProduction() ? BaseUrl.PROD : BaseUrl.DEV
     const redirect = `${window.location.protocol}//${window.location.host}/deck`;
+    let url = `${BASE_URL}/auth/google?redirect=${redirect}`
+
+    if (country) {
+      url += `&country=${country}`
+    }
+
     if (type === "login") {
-      window.location.href = `${BASE_URL}/auth/google?redirect=${redirect}`;
+      window.location.href = url;
       return
     }
 
-    window.location.href = `${BASE_URL}/auth/google?redirect=${redirect}`;
+    window.location.href = url;
+  }
+
+  if (isCountryLoading) {
+    return <div className="skeleton w-80 h-96"></div>
   }
 
   return (
