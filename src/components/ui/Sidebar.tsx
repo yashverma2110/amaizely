@@ -4,7 +4,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { faCompass, faGear, faLayerGroup, faRightFromBracket, faBagShopping, faMessage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { LOGOUT_USER } from "@/services/AuthService";
 import Image from "next/image";
 import DeckCreatorButton from "../DeckCreatorButton";
 import { Suspense } from "react";
