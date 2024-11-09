@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL('https://amaizely.com'),
   title: "Amaizely | Learn smartly with AI",
-  description: "Create and study flashcards efficiently with AI-powered generation from websites, YouTube, books, and PDFs. Use smart spaced repetition for better learning.",
+  description: "Create and study flashcards efficiently with AI-powered flashcard maker using websites, YouTube, books, and PDFs. Use smart spaced repetition for better learning.",
   keywords: [
     "flashcards",
     "AI flashcards",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "Amaizely | Learn smartly with AI",
-    description: "Create and study flashcards efficiently with AI-powered generation from websites, YouTube, books, and PDFs. Use smart spaced repetition for better learning.",
+    description: "Create and study flashcards efficiently with AI-powered flashcard maker using websites, YouTube, books, and PDFs. Use smart spaced repetition for better learning.",
     images: [
       {
         url: "/og-image.png", // Make sure to add your OG image
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Amaizely | Smart Flashcards with AI",
-    description: "Create and study flashcards efficiently with AI-powered generation from websites, YouTube, books, and PDFs. Use smart spaced repetition for better learning.",
+    description: "Create and study flashcards efficiently with AI-powered flashcard maker using websites, YouTube, books, and PDFs. Use smart spaced repetition for better learning.",
     images: ["/og-image.png"], // Make sure to add your Twitter card image
   },
   robots: {

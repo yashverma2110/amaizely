@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
 .in-app-layout {
   height: 100vh;
   max-height: 100vh;
