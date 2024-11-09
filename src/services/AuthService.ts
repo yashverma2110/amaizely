@@ -1,5 +1,6 @@
 import AxiosInstance from "@/config/AxiosService";
 import type { IUser } from "@/types/IUser";
+import { isProduction } from "@/utils/EnvUtils";
 import { AxiosError } from "axios";
 
 export async function LOGIN_USER({ email, password }: any) {
@@ -119,4 +120,11 @@ export async function LOGOUT_USER() {
       error: err.response?.data
     }
   }
+}
+
+export async function GET_COUNTRY() {
+  const domain = isProduction() ? 'https://www.amaizely.com' : 'http://localhost:3000'
+  const response = await fetch(`${domain}/api/country`);
+  const data = await response.json();
+  return data;
 }

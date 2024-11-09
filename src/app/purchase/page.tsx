@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import SubscriptionForm from "@/components/SubscriptionForm";
-import { GET_USER } from "@/services/AuthService";
+import { GET_COUNTRY, GET_USER } from "@/services/AuthService";
 import { setHeaders } from "@/config/AxiosService";
 import { GET_TOTAL_DECKS } from "@/services/DeckService";
 
@@ -16,7 +16,7 @@ export default async function SubscriptionPage() {
     })
   }
 
-  const [userResponse, totalDecksResponse] = await Promise.all([GET_USER(), GET_TOTAL_DECKS()])
+  const [userResponse, totalDecksResponse, countryResponse] = await Promise.all([GET_USER(), GET_TOTAL_DECKS(), GET_COUNTRY()])
 
   if (userResponse.status === 403 || userResponse.status === 401) {
     redirect('/login')
@@ -41,7 +41,7 @@ export default async function SubscriptionPage() {
           <h1 className="card-title">Buy decks & unlock</h1>
 
           <Suspense fallback={<div className="skeleton rounded-lg bg-gray-300 h-80 w-full drop-shadow"></div>}>
-            <SubscriptionForm country={userResponse.country} region={userResponse.region} />
+            <SubscriptionForm country={countryResponse.country} region={countryResponse.region} />
           </Suspense>
         </div>
       </div>
