@@ -82,7 +82,7 @@ export default function SaveDeckForm({ flashcards, deck, mode, onSave, onCancel 
       })
 
       if (response.success) {
-        onSave?.();
+        await onSave?.();
         router.push('/deck');
         return;
       }
@@ -99,7 +99,7 @@ export default function SaveDeckForm({ flashcards, deck, mode, onSave, onCancel 
         isDraft: shouldSaveAsDraft()
       }, flashcardsToSave)
       if (response.success) {
-        onSave?.();
+        await onSave?.();
         router.push('/deck');
         return;
       }
