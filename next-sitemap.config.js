@@ -12,7 +12,7 @@ module.exports = {
       }
     ]
   },
-  transform: async (config, path) => {
+  additionalPaths: async (config, path) => {
     const paths = [
       {
         loc: '/', // Landing page
