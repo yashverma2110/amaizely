@@ -37,12 +37,16 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
 
   useEffect(() => {
     GET_USER().then((response) => {
-      setIsPageLoading(false)
+      if (response.status === 403 || response.status === 401) {
+        router.replace('/login')
+        return;
+      }
+
       if (response.success) {
         setTotalDecks(response.user?.totalDecks || FREE_DECKS)
         setIsAuthenticated(true)
       }
-    }).catch(() => {
+    }).finally(() => {
       setIsPageLoading(false)
     })
   }, [])

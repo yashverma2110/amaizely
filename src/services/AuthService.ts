@@ -15,6 +15,13 @@ export async function LOGIN_USER({ email, password }: any) {
     }
   } catch (error) {
     const err = error as AxiosError;
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
 
     return {
       success: false,
@@ -123,13 +130,20 @@ export async function LOGOUT_USER() {
 }
 
 export async function GET_COUNTRY() {
-  const response = await fetch('https://ipapi.co/json/');
-  const data = await response.json();
+  try {
+    const response = await fetch('https://ipapi.co/json/');
+    const data = await response.json();
 
-  return {
-    country: data.country_code,
-    city: data.city,
-    latitude: data.latitude,
-    longitude: data.longitude
+    return {
+      country: data.country_code,
+      city: data.city,
+      latitude: data.latitude,
+      longitude: data.longitude
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: error
+    }
   }
 }

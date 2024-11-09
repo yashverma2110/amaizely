@@ -19,7 +19,7 @@ export default function AlertsManager({ alerts }: { alerts: IAlert[] }) {
   }
 
   return (
-    <div className="fixed bottom-16 md:bottom-4 flex flex-col w-full p-4 gap-2">
+    <div className="fixed bottom-16 right-0 md:bottom-4 flex flex-col p-4 gap-2">
       {allAlerts.map((alert, index) => (
         <Alert key={alert.message} {...alert} onClose={() => onClose(index)} />
       ))}

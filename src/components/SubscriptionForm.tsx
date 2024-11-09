@@ -1,14 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { COMPLETE_ORDER, CREATE_ORDER } from "@/services/PaymentService"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCheckCircle, faInfoCircle, faMinus, faPlus, faSpinner, faUnlock } from "@fortawesome/free-solid-svg-icons";
 import { MAX_DECKS, MIN_DECKS, PRICE_PER_DECK, AI_GENERATION_PER_DECK, DISCOUNT_PER_DECK, DECK_JUMPS, UPSELL_POINTS } from "@/config/SubscriptionConstants";
 import { GET_COUNTRY } from "@/services/AuthService";
 
-export default function SubscriptionForm({ country }: { country?: string }) {
+export default function SubscriptionForm({ country, isLoggedIn }: { country?: string, isLoggedIn: boolean }) {
   const [isLoading, setIsLoading] = useState(true)
   const [isCountryLoading, setIsCountryLoading] = useState(true)
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'confirming' | 'init'>('init')
@@ -16,10 +16,19 @@ export default function SubscriptionForm({ country }: { country?: string }) {
   const [totalDecks, setTotalDecks] = useState(MIN_DECKS + 2 * DECK_JUMPS)
 
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   useEffect(() => {
     if (country) {
+      localStorage.setItem('user_country', country)
       setCurrency(country === 'IN' ? 'INR' : 'USD')
+      setIsCountryLoading(false)
+      return
+    }
+
+    const userCountry = localStorage.getItem('user_country')
+    if (userCountry) {
+      setCurrency(userCountry === 'IN' ? 'INR' : 'USD')
       setIsCountryLoading(false)
       return
     }
@@ -99,6 +108,11 @@ export default function SubscriptionForm({ country }: { country?: string }) {
   }
 
   async function handleSubscriptionIntent() {
+    if (!isLoggedIn) {
+      router.push('/login')
+      return;
+    }
+
     if (status === 'loading' || status === 'confirming') {
       return
     }

@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { GET_MY_DECKS } from "@/services/DeckService";
 import DeckCard from '@/components/DeckCard';
 import type { IDeck } from '@/types/IDeck';
@@ -13,6 +14,10 @@ export default async function DeckPage() {
     setHeaders({
       Cookie: `sid=${authSid}`
     })
+  }
+
+  if (!authSid) {
+    redirect('/login')
   }
 
   const deckResponse = await GET_MY_DECKS();

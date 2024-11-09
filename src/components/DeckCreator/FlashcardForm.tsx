@@ -9,15 +9,17 @@ import FormErrorMessage from '../ui/FormErrorMessage';
 import { FREE_FLASHCARDS_PER_DECK, MAX_FLASHCARDS_PER_DECK } from '@/config/SubscriptionConstants';
 import { MIN_FLASHCARDS_PER_DECK } from '@/config/SubscriptionConstants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUnlock } from '@fortawesome/free-solid-svg-icons';
+import { faPaste, faUnlock } from '@fortawesome/free-solid-svg-icons';
 
 interface FlashcardFormProps {
+  defaultValue?: string
   variant: 'youtube' | 'website' | 'text' | 'pdf'
   hasSubscription: boolean;
+  onPaste?: () => void
   onSubmit: (youtubeLink?: string, file?: File, deckSize?: number) => Promise<void>
 }
 
-export default function FlashcardForm({ variant, onSubmit, hasSubscription }: FlashcardFormProps) {
+export default function FlashcardForm({ defaultValue, variant, onSubmit, onPaste, hasSubscription }: FlashcardFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [flashcardCount, setFlashcardCount] = useState(5);
@@ -205,6 +207,7 @@ export default function FlashcardForm({ variant, onSubmit, hasSubscription }: Fl
         <textarea
           placeholder="Paste your text here"
           name="text-field"
+          defaultValue={defaultValue}
           className="textarea textarea-bordered textarea-md w-full"
           onFocus={() => setErrorMessage("")}
         />
@@ -218,6 +221,7 @@ export default function FlashcardForm({ variant, onSubmit, hasSubscription }: Fl
         <input
           type="text"
           name="text-field"
+          defaultValue={defaultValue}
           className="grow"
           placeholder="Paste link here"
           autoComplete="off"
@@ -225,12 +229,16 @@ export default function FlashcardForm({ variant, onSubmit, hasSubscription }: Fl
         />
         <kbd className="kbd kbd-sm hidden md:block">⌘</kbd>
         <kbd className="kbd kbd-sm hidden md:block">V</kbd>
+        <button className="btn btn-sm md:btn-ghost" onClick={onPaste}>
+          <FontAwesomeIcon icon={faPaste} className="h-4 w-4" />
+          <span className="hidden md:block">Paste</span>
+        </button>
       </label>
     )
   }
 
   return (
-    <form className="youtube-actions w-full flex flex-col md:flex-row gap-2" onSubmit={handleSubmit}>
+    <form className="youtube-actions w-full flex flex-col gap-2" onSubmit={handleSubmit}>
       <div className="flex flex-col w-full">
         {getInput()}
         <div className="mt-2">
@@ -240,22 +248,22 @@ export default function FlashcardForm({ variant, onSubmit, hasSubscription }: Fl
         <hr className="my-2 border-neutral-200" />
 
         <div className="flex flex-col gap-1">
-          <p className="text-sm">Generate <strong>{flashcardCount}</strong> flashcards</p>
+          <p className="text-sm md:text-base">Generate <strong>{flashcardCount}</strong> flashcards</p>
           <div className="flex items-center gap-2">
-            <span>{MIN_FLASHCARDS_PER_DECK}</span>
+            <span className="md:text-lg">{MIN_FLASHCARDS_PER_DECK}</span>
             <input
               type="range"
               min={MIN_FLASHCARDS_PER_DECK}
               max={MAX_FLASHCARDS_PER_DECK}
               value={flashcardCount}
-              className="range range-xs"
+              className={`range ${shouldShowUpsell() ? 'range-warning' : ''} range-xs md:range-sm`}
               onChange={(e) => setFlashcardCount(parseInt(e.target.value))}
             />
-            <span>{MAX_FLASHCARDS_PER_DECK}</span>
+            <span className="md:text-lg">{MAX_FLASHCARDS_PER_DECK}</span>
           </div>
         </div>
       </div>
-      <button className={`btn ${shouldShowUpsell() ? 'btn-warning' : 'btn-primary'}`} type="submit">
+      <button className={`btn md:mt-8 ${shouldShowUpsell() ? 'btn-warning' : 'btn-primary'}`} type="submit">
         {getButtonText()}
         {
           shouldShowUpsell() && <FontAwesomeIcon icon={faUnlock} className="h-4 w-4" />

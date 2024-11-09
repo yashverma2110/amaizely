@@ -11,11 +11,13 @@ import AILoadingState from "../ui/AILoadingState"
 import FormErrorMessage from "../ui/FormErrorMessage"
 import { FREE_DECKS } from "@/config/SubscriptionConstants"
 import FlashcardDeckCreatorLoading from "../ui/FlashcardDeckCreatorLoading"
+import AlertsManager, { IAlert } from "../AlertsManager"
 
 interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text' | 'pdf';
 }
 export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps) {
+  const [clipboardContent, setClipboardContent] = useState<string>("")
   const [flashcards, setFlashcards] = useState<IFlashcard[]>([])
   const [websiteLink, setWebsiteLink] = useState<string>("")
   const [youtubeLink, setYoutubeLink] = useState<string>("")
@@ -25,6 +27,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [totalDecks, setTotalDecks] = useState(3)
+  const [alerts, setAlerts] = useState<IAlert[]>([])
 
   const saveDeckModalRef = useRef<HTMLDialogElement>(null)
 
@@ -38,7 +41,58 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }).catch(() => {
       setIsPageLoading(false)
     })
+
+    window.addEventListener('paste', (event) => {
+      if (variant === 'website' || variant === 'text' || variant === 'pdf') {
+        setClipboardContent(event.clipboardData?.getData('text') || "")
+      }
+    })
+
+    return () => {
+      window.removeEventListener('paste', () => { })
+    }
   }, [])
+
+  async function handlePaste() {
+    try {
+      // First check if the clipboard API is available
+      if (!navigator.clipboard) {
+        setAlerts([{
+          message: 'Clipboard access not available',
+          type: 'error'
+        }])
+        return;
+      }
+
+      // Request clipboard permission
+      const permission = await navigator.permissions.query({
+        name: 'clipboard-read' as PermissionName
+      });
+
+      if (permission.state === 'denied') {
+        setAlerts([{
+          message: 'Please allow clipboard access in your browser settings',
+          type: 'info'
+        }])
+        return;
+      }
+
+      if (permission.state === 'prompt') {
+        // The user will be prompted to grant permission
+        const text = await navigator.clipboard.readText();
+        setClipboardContent(text);
+      } else if (permission.state === 'granted') {
+        // Permission already granted
+        const text = await navigator.clipboard.readText();
+        setClipboardContent(text);
+      }
+    } catch (error) {
+      setAlerts([{
+        message: (error as Error).message || 'Failed to access clipboard',
+        type: 'error'
+      }])
+    }
+  }
 
   function getCardTitle() {
     switch (variant) {
@@ -155,7 +209,13 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
         <div className="card-body">
           <h2 className="card-title">{getCardTitle()}</h2>
           <p>{getCardBody()}</p>
-          <FlashcardForm variant={variant} hasSubscription={totalDecks > FREE_DECKS} onSubmit={handleDeckCreation} />
+          <FlashcardForm
+            defaultValue={clipboardContent}
+            variant={variant}
+            hasSubscription={totalDecks > FREE_DECKS}
+            onPaste={handlePaste}
+            onSubmit={handleDeckCreation}
+          />
           {errorMessage && <FormErrorMessage message={errorMessage} />}
           {
             statusCode === 402 && (
@@ -214,6 +274,8 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
           onCancel={() => saveDeckModalRef.current?.close()}
         />
       </dialog>
+
+      <AlertsManager alerts={alerts} />
     </div>
   )
 }

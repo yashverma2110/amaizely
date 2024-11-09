@@ -9,11 +9,9 @@ interface IAlertProps extends IAlert {
 export default function Alert({ message, type, duration, onClose }: IAlertProps) {
 
   useEffect(() => {
-    if (duration) {
-      setTimeout(() => {
-        onClose();
-      }, duration);
-    }
+    setTimeout(() => {
+      onClose();
+    }, duration || 3000);
   }, [duration])
 
   function getIconForAlertType(type: IAlert["type"]) {
@@ -31,8 +29,23 @@ export default function Alert({ message, type, duration, onClose }: IAlertProps)
     }
   }
 
+  function getAlertClassForType(type: IAlert["type"]) {
+    switch (type) {
+      case "info":
+        return "alert-info";
+      case "success":
+        return "alert-success";
+      case "error":
+        return "alert-error";
+      case "warning":
+        return "alert-warning";
+      default:
+        return "alert-info";
+    }
+  }
+
   return (
-    <div role="alert" className={`alert alert-${type} flex text-xs md:text-base text-left items-center text-white font-semibold`}>
+    <div role="alert" className={`alert ${getAlertClassForType(type)} w-fit flex text-xs md:text-base text-left items-center text-white font-semibold`}>
       <FontAwesomeIcon icon={getIconForAlertType(type)} />
       <span>{message}</span>
     </div>

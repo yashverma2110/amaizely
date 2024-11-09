@@ -11,6 +11,10 @@ export default function LogoutButton() {
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   async function handleLogout() {
+    localStorage.removeItem('user_country')
+    localStorage.removeItem('payStatus')
+    localStorage.removeItem('flashcards_manual_amaizely')
+
     setIsLoggingOut(true)
     const response = await LOGOUT_USER()
 

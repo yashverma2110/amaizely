@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DeckCreatorForm from "./DeckCreaterForm";
@@ -11,7 +11,6 @@ import { GET_TOTAL_DECKS } from "@/services/DeckService";
 
 export default function DeckCreatorButton() {
   const deckModal = useRef<HTMLDialogElement>(null)
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [totalDecks, setTotalDecks] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
@@ -20,7 +19,7 @@ export default function DeckCreatorButton() {
   useEffect(() => {
     Promise.all([GET_USER(), GET_TOTAL_DECKS()]).then(([userResponse, totalDecksResponse]) => {
       if (userResponse.status === 403 || userResponse.status === 401) {
-        redirect('/login')
+        return;
       }
       setTotalDecks(totalDecksResponse.count)
       setDecksAllocated(userResponse.user?.totalDecks || 0)
@@ -36,7 +35,6 @@ export default function DeckCreatorButton() {
   }, [searchParams])
 
   function handleClose() {
-    router.replace('/deck');
     deckModal.current?.close();
   }
 
