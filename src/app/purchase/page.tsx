@@ -4,7 +4,39 @@ import SubscriptionForm from "@/components/SubscriptionForm";
 import { GET_USER } from "@/services/AuthService";
 import { setHeaders } from "@/config/AxiosService";
 import { GET_TOTAL_DECKS } from "@/services/DeckService";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Buy Flashcard Decks | Amaizely",
+  description: "Purchase decks to unlock more flashcard generation capabilities. Pay as you go with no subscription hassle.",
+  keywords: [
+    "flashcard pricing",
+    "buy flashcard decks",
+    "pay as you go flashcards",
+    "AI flashcard pricing",
+    "study material purchase",
+    "learning tools pricing"
+  ],
+  openGraph: {
+    title: "Buy Decks | Amaizely",
+    description: "Purchase decks to unlock more flashcard generation capabilities. Pay as you go with no subscription hassle.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 800,
+        height: 400,
+        alt: "Amaizely Deck Pricing"
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Buy Decks | Amaizely",
+    description: "Purchase decks to unlock more flashcard generation capabilities. Pay as you go with no subscription hassle.",
+    images: ["/og-image.png"],
+  },
+};
 
 export default async function SubscriptionPage() {
   const cookieStore = cookies();

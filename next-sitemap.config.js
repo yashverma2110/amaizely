@@ -25,6 +25,16 @@ module.exports = {
         priority: 0.8,
       },
       {
+        loc: '/deck/create/pdf',
+        changefreq: 'weekly',
+        priority: 0.8,
+      },
+      {
+        loc: '/deck/create/website',
+        changefreq: 'weekly',
+        priority: 0.8,
+      },
+      {
         loc: '/help/flashcard-maker',
         changefreq: 'monthly',
         priority: 0.7,
