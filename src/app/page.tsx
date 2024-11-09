@@ -71,14 +71,14 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="card bg-base-100 shadow-xl md:row-span-4">
+        <div className="card bg-base-100 shadow-xl md:row-span-4 border-b-4 border-warning">
           <div className="card-body">
             <h2 className="card-title">Pay as you go</h2>
             <p className="text-base md:text-lg">Amaizely let&apos;s you buy decks as you go, escape the headache of managing multiple subscriptions.</p>
           </div>
         </div>
 
-        <div className="card bg-base-100 shadow-xl md:row-span-4 border-b-2 border-warning">
+        <div className="card bg-base-100 shadow-xl md:row-span-4">
           <div className="card-body">
             <h2 className="card-title">Be creative</h2>
             <p className="text-base md:text-lg">Amaizely has an amazing editor to let you create flashcards manually, for when you want to create your own flashcards.</p>
