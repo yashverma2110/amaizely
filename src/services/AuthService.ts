@@ -1,6 +1,5 @@
 import AxiosInstance from "@/config/AxiosService";
 import type { IUser } from "@/types/IUser";
-import { isProduction } from "@/utils/EnvUtils";
 import { AxiosError } from "axios";
 
 export async function LOGIN_USER({ email, password }: any) {
@@ -123,8 +122,13 @@ export async function LOGOUT_USER() {
 }
 
 export async function GET_COUNTRY() {
-  const domain = isProduction() ? 'https://www.amaizely.com' : 'http://localhost:3000'
-  const response = await fetch(`${domain}/api/country`);
+  const response = await fetch('https://ipapi.co/json/');
   const data = await response.json();
-  return data;
+
+  return {
+    country: data.country_code,
+    city: data.city,
+    latitude: data.latitude,
+    longitude: data.longitude
+  }
 }
