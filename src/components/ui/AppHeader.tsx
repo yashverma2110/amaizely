@@ -5,7 +5,7 @@ import LogoutButton from "./LogoutButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-solid-svg-icons";
 
-export default function AppHeader({ className }: { className: string }) {
+export default function AppHeader({ className }: { className?: string }) {
   const cookieStore = cookies();
 
   function isLoggedIn() {

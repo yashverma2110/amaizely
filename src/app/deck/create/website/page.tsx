@@ -1,5 +1,7 @@
-import FlashcardDeckCreator from "@/components/DeckCreator/FlashcardDeckCreator";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import FlashcardDeckCreator from "@/components/DeckCreator/FlashcardDeckCreator";
+import FlashcardDeckCreatorLoading from "@/components/ui/FlashcardDeckCreatorLoading";
 
 export const metadata: Metadata = {
   title: "Create Flashcards from Websites | Amaizely",
@@ -40,7 +42,9 @@ export const metadata: Metadata = {
 export default function CreateDeckUsingWebsitePage() {
   return (
     <div className="create-deck-page flex justify-center p-4">
-      <FlashcardDeckCreator variant="website" />
+      <Suspense fallback={<FlashcardDeckCreatorLoading />}>
+        <FlashcardDeckCreator variant="website" />
+      </Suspense>
     </div>
   )
 }

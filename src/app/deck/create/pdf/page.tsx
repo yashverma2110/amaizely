@@ -1,6 +1,7 @@
-"use client"
 import FlashcardDeckCreator from "@/components/DeckCreator/FlashcardDeckCreator";
+import FlashcardDeckCreatorLoading from "@/components/ui/FlashcardDeckCreatorLoading";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Create Flashcards from PDF | Amaizely",
@@ -42,7 +43,9 @@ export default function CreateDeckUsingManualPage() {
 
   return (
     <div className="create-deck-page flex justify-center p-4">
-      <FlashcardDeckCreator variant="pdf" />
+      <Suspense fallback={<FlashcardDeckCreatorLoading />}>
+        <FlashcardDeckCreator variant="pdf" />
+      </Suspense>
     </div>
   )
 }

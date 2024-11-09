@@ -10,6 +10,7 @@ import SaveDeckForm from "../SaveDeckForm"
 import AILoadingState from "../ui/AILoadingState"
 import FormErrorMessage from "../ui/FormErrorMessage"
 import { FREE_DECKS } from "@/config/SubscriptionConstants"
+import FlashcardDeckCreatorLoading from "../ui/FlashcardDeckCreatorLoading"
 
 interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text' | 'pdf';
@@ -145,12 +146,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   }
 
   if (isPageLoading) {
-    return <div className="page-loading-section h-screen w-full grid grid-rows-12 gap-4 my-2">
-      <div className="skeleton bg-gray-300 row-span-3 w-full drop-shadow"></div>
-      <div className="skeleton bg-gray-300 row-span-1 w-full drop-shadow"></div>
-      <div className="skeleton bg-gray-300 row-span-2 w-full drop-shadow"></div>
-      <div className="skeleton bg-gray-300 row-span-2 w-full drop-shadow"></div>
-    </div>
+    return <FlashcardDeckCreatorLoading />
   }
 
   return (
