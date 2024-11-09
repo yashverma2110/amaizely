@@ -7,15 +7,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCheckCircle, faInfoCircle, faMinus, faPlus, faSpinner, faUnlock } from "@fortawesome/free-solid-svg-icons";
 import { MAX_DECKS, MIN_DECKS, PRICE_PER_DECK, AI_GENERATION_PER_DECK, DISCOUNT_PER_DECK, DECK_JUMPS, UPSELL_POINTS } from "@/config/SubscriptionConstants";
 
-export default function SubscriptionForm() {
+export default function SubscriptionForm({ country = 'IN', region }: { country: string, region?: string }) {
   const [isLoading, setIsLoading] = useState(true)
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'confirming' | 'init'>('init')
-  const [currency, _setCurrency] = useState<'USD' | 'INR'>('INR')
+  const [currency, setCurrency] = useState<'USD' | 'INR'>('INR')
   const [totalDecks, setTotalDecks] = useState(MIN_DECKS + 2 * DECK_JUMPS)
 
   const searchParams = useSearchParams()
 
   useEffect(() => {
+    // set currency based on country
+    setCurrency(country === 'US' ? 'USD' : 'INR')
+
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
@@ -52,7 +55,7 @@ export default function SubscriptionForm() {
   }
 
   function getDiscountedPrice() {
-    return PRICE_PER_DECK * totalDecks - (PRICE_PER_DECK * totalDecks * DISCOUNT_PER_DECK)
+    return parseFloat((PRICE_PER_DECK[currency] * totalDecks - (PRICE_PER_DECK[currency] * totalDecks * DISCOUNT_PER_DECK)).toFixed(2))
   }
 
   function getSortedUpsellPoints() {
@@ -73,8 +76,8 @@ export default function SubscriptionForm() {
     }
   }
 
-  function getMessage(message: string) {
-    if (searchParams.get('intent') === 'ai_generation') {
+  function getMessage(message: string, intent: string) {
+    if (intent === 'ai_generation') {
       return message.replace(':1', (AI_GENERATION_PER_DECK * totalDecks).toString())
     }
 
@@ -158,7 +161,7 @@ export default function SubscriptionForm() {
         {
           getSortedUpsellPoints().map((point) => (
             <li key={point.message} className={`${searchParams.get('intent') === point.intent ? 'italic font-semibold text-yellow-500' : ''}`}>
-              {getMessage(point.message)} {searchParams.get('intent') === point.intent && <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />}
+              {getMessage(point.message, point.intent)} {searchParams.get('intent') === point.intent && <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />}
             </li>
           ))
         }
@@ -167,7 +170,7 @@ export default function SubscriptionForm() {
       </ul>
 
       <div>
-        <h3 className="text-center mb-2 text-lg md:text-xl">Add or remove 5 decks</h3>
+        <h3 className="text-center mb-2 text-lg md:text-xl">Add or remove {DECK_JUMPS} decks</h3>
         <div className="flex justify-center items-center gap-2">
           <button className="btn btn-xs btn-outline" disabled={totalDecks === MIN_DECKS} onClick={decrementDecks}>
             <FontAwesomeIcon icon={faMinus} className="h-4 w-4" />
@@ -180,7 +183,7 @@ export default function SubscriptionForm() {
       </div>
 
       <div className="border border-neutral-200 rounded p-2 text-2xl md:text-4xl">
-        <strong className="font-extralight">Pay:</strong> <span className="font-bold">{getCurrencySymbol()} <span className="line-through font-thin">{PRICE_PER_DECK * totalDecks}</span> {getDiscountedPrice()}</span>
+        <strong className="font-extralight">Pay:</strong> <span className="font-bold">{getCurrencySymbol()} <span className="line-through font-thin">{(PRICE_PER_DECK[currency] * totalDecks).toFixed(2)}</span> {getDiscountedPrice()}</span>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -188,12 +191,12 @@ export default function SubscriptionForm() {
           status !== 'error' && (
             <p className="text-sm md:text-base text-success flex items-center">
               <FontAwesomeIcon icon={faCheckCircle} className="h-3 w-3 mr-1" />
-              <span className="mr-1">{status === 'success' ? 'Payment successful! You saved' : 'You will save'}</span> <strong>{getCurrencySymbol()} {PRICE_PER_DECK * totalDecks - getDiscountedPrice()}</strong>
+              <span className="mr-1">{status === 'success' ? 'Payment successful! You saved' : 'You will save'}</span> <strong>{getCurrencySymbol()} {(PRICE_PER_DECK[currency] * totalDecks - getDiscountedPrice()).toFixed(2)}</strong>
             </p>
           )
         }
         {
-          totalDecks === MIN_DECKS && (
+          (totalDecks === MIN_DECKS && ['init', 'error'].includes(status)) && (
             <p className="text-sm text-error flex">
               <FontAwesomeIcon icon={faInfoCircle} className="h-3 w-3 mr-1 my-1" />
               <span>Minimum cart value is <strong>{MIN_DECKS}</strong></span>
@@ -201,7 +204,7 @@ export default function SubscriptionForm() {
           )
         }
         {
-          totalDecks === MAX_DECKS && (
+          totalDecks === MAX_DECKS && ['init', 'error'].includes(status) && (
             <p className="text-sm text-error flex">
               <FontAwesomeIcon icon={faInfoCircle} className="h-3 w-3 mr-1 my-1" />
               <span>You can buy maximum <strong>{MAX_DECKS}</strong> decks at once</span>

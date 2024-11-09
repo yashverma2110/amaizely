@@ -61,7 +61,9 @@ export async function GET_USER() {
 
     return {
       success: true,
-      user: response.data.user as IUser
+      user: response.data.user as IUser,
+      country: response.data.country,
+      region: response.data.region
     }
   } catch (error) {
     const err = error as AxiosError;
