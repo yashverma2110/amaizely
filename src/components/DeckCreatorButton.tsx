@@ -55,7 +55,7 @@ export default function DeckCreatorButton() {
 
   return (
     <>
-      <button className="btn btn-active btn-primary w-full" onClick={() => deckModal.current?.showModal()}>
+      <button className="deck-creator-button btn btn-active btn-primary w-full" onClick={() => deckModal.current?.showModal()}>
         <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
         Create Deck
       </button>

@@ -8,6 +8,7 @@ import { LOGOUT_USER } from "@/services/AuthService";
 import Image from "next/image";
 import DeckCreatorButton from "../DeckCreatorButton";
 import { Suspense } from "react";
+import { isMobile } from "@/utils/DeviceUtils";
 
 export default function Sidebar({ className }: { className: string }) {
   const pathname = usePathname();
@@ -31,21 +32,20 @@ export default function Sidebar({ className }: { className: string }) {
     }
   }
 
-  async function handleLogout() {
-    LOGOUT_USER()
-    router.push('/login')
-  }
-
   return (
-    <div className={`shadow-md p-4 bg-white gap-2 ${className}`}>
+    <aside className={`sidebar-container shadow-md p-4 bg-white gap-2 ${className}`}>
       <Link className="btn btn-ghost flex items-center justify-center gap-2 text-xl p-0" href="/deck">
         <Image src="https://res.cloudinary.com/dd2ntmm1w/image/upload/v1731002279/logo_s5wgbq.png" alt="amaizely_logo" width={30} height={30} />
         <p>am<span>(AI)</span>zely</p>
       </Link>
 
-      <Suspense fallback={<div className="skeleton h-12 w-full"></div>}>
-        <DeckCreatorButton />
-      </Suspense>
+      {
+        !isMobile() && (
+          <Suspense fallback={<div className="skeleton h-12 w-full"></div>}>
+            <DeckCreatorButton />
+          </Suspense>
+        )
+      }
 
       <div className="flex flex-col gap-2 mt-4">
         <Link href="/deck" className={getNavIconClass("/deck")}>
@@ -64,15 +64,11 @@ export default function Sidebar({ className }: { className: string }) {
           <FontAwesomeIcon icon={faBagShopping} className="h-4 w-4" />
           <span className={getNavTextClass("/purchase")}>Purchase</span>
         </Link>
-        <button className={getNavIconClass("/logout")} onClick={handleLogout}>
-          <FontAwesomeIcon icon={faRightFromBracket} className="h-4 w-4" />
-          <span className={getNavTextClass("/logout")}>Logout</span>
-        </button>
         <a href="https://737x5ktq3ep.typeform.com/to/OyhGWmWM" className={getNavIconClass("/feedback")} target="_blank">
           <FontAwesomeIcon icon={faMessage} className="h-4 w-4" />
           <span className={getNavTextClass("/feedback")}>Feedback</span>
         </a>
       </div>
-    </div>
+    </aside>
   )
 }

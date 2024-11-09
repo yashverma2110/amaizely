@@ -29,6 +29,7 @@ export default function LogoutButton() {
             <FontAwesomeIcon icon={faRightFromBracket} className="h-5 w-5" />
         )
       }
+      <span className="hidden md:block">Logout</span>
     </button>
   )
 }

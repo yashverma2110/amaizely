@@ -20,6 +20,7 @@ export default function SubscriptionForm({ country }: { country?: string }) {
   useEffect(() => {
     if (country) {
       setCurrency(country === 'IN' ? 'INR' : 'USD')
+      setIsCountryLoading(false)
       return
     }
 
@@ -170,28 +171,31 @@ export default function SubscriptionForm({ country }: { country?: string }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <ul className="list-disc list-outside">
-        {
-          getSortedUpsellPoints().map((point) => (
-            <li key={point.message} className={`${searchParams.get('intent') === point.intent ? 'italic font-semibold text-yellow-500' : ''}`}>
-              {getMessage(point.message, point.intent)} {searchParams.get('intent') === point.intent && <FontAwesomeIcon icon={faCheck} className="h-4 w-4" />}
-            </li>
-          ))
-        }
-        <li>Create or generate <strong>{totalDecks}</strong> more decks</li>
-        <li>Access to more incoming AI features</li>
-      </ul>
+      <div className="flex flex-col gap-8">
+        <ul>
+          {
+            getSortedUpsellPoints().map((point) => (
+              <li key={point.message} className={`flex items-center gap-2 ${searchParams.get('intent') === point.intent ? 'italic font-semibold text-yellow-500 text-base md:text-lg' : 'text-sm md:text-base'}`}>
+                <FontAwesomeIcon icon={faCheckCircle} className={`h-3 w-3 ${searchParams.get('intent') === point.intent ? '' : 'text-success'}`} />
+                {getMessage(point.message, point.intent)}
+              </li>
+            ))
+          }
+          <li className="flex text-sm md:text-base items-center gap-2"><FontAwesomeIcon icon={faCheckCircle} className="text-success h-3 w-3" /> Create or generate <strong>{totalDecks}</strong> more decks</li>
+          <li className="flex text-sm md:text-base items-center gap-2"><FontAwesomeIcon icon={faCheckCircle} className="text-success h-3 w-3" /> Access to more incoming AI features</li>
+        </ul>
 
-      <div>
-        <h3 className="text-center mb-2 text-lg md:text-xl">Add or remove {DECK_JUMPS} decks</h3>
-        <div className="flex justify-center items-center gap-2">
-          <button className="btn btn-xs btn-outline" disabled={totalDecks === MIN_DECKS} onClick={decrementDecks}>
-            <FontAwesomeIcon icon={faMinus} className="h-4 w-4" />
-          </button>
-          <span className="text-3xl md:text-5xl bg-neutral-200 rounded px-4">{totalDecks}</span>
-          <button className="btn btn-xs btn-outline" disabled={totalDecks === MAX_DECKS} onClick={incrementDecks}>
-            <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
-          </button>
+        <div className="flex flex-col items-center h-full">
+          <div className="flex justify-center items-center gap-2">
+            <button className="btn btn-xs btn-outline" disabled={totalDecks === MIN_DECKS} onClick={decrementDecks}>
+              <FontAwesomeIcon icon={faMinus} className="h-4 w-4" />
+            </button>
+            <span className="text-3xl md:text-5xl bg-neutral-200 rounded px-4">{totalDecks}</span>
+            <button className="btn btn-xs btn-outline" disabled={totalDecks === MAX_DECKS} onClick={incrementDecks}>
+              <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
+            </button>
+          </div>
+          <h3 className="text-center mt-2 text-lg whitespace-nowrap">Add or remove {DECK_JUMPS} decks</h3>
         </div>
       </div>
 
