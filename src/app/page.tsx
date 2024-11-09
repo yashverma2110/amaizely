@@ -108,6 +108,9 @@ export default function Home() {
           <h6 className="footer-title">Company</h6>
           <Link className="link link-hover" href="/login">Login</Link>
           <Link className="link link-hover" href="/register">Register</Link>
+          <Link className="link link-hover" href="/purchase">Pricing</Link>
+          <Link className="link link-hover" href="/about-us">About Us</Link>
+          <Link className="link link-hover" href="/contact-us">Contact Us</Link>
         </nav>
         <nav>
           <h6 className="footer-title">Blog</h6>
