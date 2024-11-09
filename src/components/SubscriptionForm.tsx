@@ -6,9 +6,11 @@ import { COMPLETE_ORDER, CREATE_ORDER } from "@/services/PaymentService"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCheckCircle, faInfoCircle, faMinus, faPlus, faSpinner, faUnlock } from "@fortawesome/free-solid-svg-icons";
 import { MAX_DECKS, MIN_DECKS, PRICE_PER_DECK, AI_GENERATION_PER_DECK, DISCOUNT_PER_DECK, DECK_JUMPS, UPSELL_POINTS } from "@/config/SubscriptionConstants";
+import { GET_COUNTRY } from "@/services/AuthService";
 
-export default function SubscriptionForm({ country = 'IN', region }: { country: string, region?: string }) {
+export default function SubscriptionForm() {
   const [isLoading, setIsLoading] = useState(true)
+  const [isCountryLoading, setIsCountryLoading] = useState(true)
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'confirming' | 'init'>('init')
   const [currency, setCurrency] = useState<'USD' | 'INR'>('INR')
   const [totalDecks, setTotalDecks] = useState(MIN_DECKS + 2 * DECK_JUMPS)
@@ -16,9 +18,14 @@ export default function SubscriptionForm({ country = 'IN', region }: { country: 
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    // set currency based on country
-    setCurrency(country === 'US' ? 'USD' : 'INR')
+    GET_COUNTRY().then((response) => {
+      setCurrency(response.country === 'US' ? 'USD' : 'INR')
+    }).finally(() => {
+      setIsCountryLoading(false)
+    })
+  }, [])
 
+  useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
@@ -145,7 +152,7 @@ export default function SubscriptionForm({ country = 'IN', region }: { country: 
     rzp.open();
   }
 
-  if (isLoading) {
+  if (isLoading || isCountryLoading) {
     return (
       <div className="flex flex-col gap-4">
         <div className="skeleton rounded-lg bg-gray-300 h-40 w-full drop-shadow"></div>
