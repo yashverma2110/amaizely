@@ -210,7 +210,13 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
       }
 
       <dialog id="save-deck-modal" ref={saveDeckModalRef} className="modal modal-bottom sm:modal-middle">
-        <SaveDeckForm mode="create" flashcards={flashcards} onCancel={() => saveDeckModalRef.current?.close()} />
+        <SaveDeckForm
+          mode="create"
+          flashcards={flashcards}
+          createdFrom={variant}
+          source={youtubeLink || websiteLink}
+          onCancel={() => saveDeckModalRef.current?.close()}
+        />
       </dialog>
     </div>
   )

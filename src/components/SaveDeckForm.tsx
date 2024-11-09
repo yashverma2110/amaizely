@@ -7,12 +7,14 @@ import { CREATE_DECK_WITH_FLASHCARDS, IFlashcard, UPDATE_DECK_AND_DECK_CARDS_BY_
 interface ISaveDeckFormProps {
   flashcards: IFlashcard[];
   deck?: IDeck;
+  createdFrom?: 'youtube' | 'website' | 'text' | 'pdf',
+  source?: string,
   mode: "create" | "edit";
   onSave?: () => void;
   onCancel: () => void;
 }
 
-export default function SaveDeckForm({ flashcards, deck, mode, onSave, onCancel }: ISaveDeckFormProps) {
+export default function SaveDeckForm({ flashcards, deck, createdFrom, source, mode, onSave, onCancel }: ISaveDeckFormProps) {
   const [formErrors, setFormErrors] = useState<Record<'deck-name' | 'deck-description', string>>({
     'deck-name': '',
     'deck-description': ''
@@ -78,6 +80,8 @@ export default function SaveDeckForm({ flashcards, deck, mode, onSave, onCancel 
         description: deckDescription,
         flashcards: flashcardsToSave,
         visibility: deckVisibility === 'on' ? 'public' : 'private',
+        createdFrom,
+        source,
         isDraft: shouldSaveAsDraft()
       })
 

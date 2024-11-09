@@ -146,6 +146,8 @@ export async function CREATE_DECK_WITH_FLASHCARDS(payload: {
   description: string;
   visibility?: 'public' | 'private',
   isDraft?: boolean,
+  createdFrom?: 'youtube' | 'website' | 'text' | 'pdf',
+  source?: string,
   flashcards: {
     title: string;
     content: string;
