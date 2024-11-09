@@ -44,7 +44,7 @@ export default function FlashcardMaker() {
           </h1>
 
           <p className="text-base md:text-lg text-slate-900/70 mb-8">
-            Transform any learning material into effective flashcards with Amaizely's intelligent flashcard maker. Our AI-powered flashcard generator helps you create personalized study materials from various sources, making learning more efficient and engaging.
+            Transform any learning material into effective flashcards with Amaizely&apos;s intelligent flashcard maker. Our AI-powered flashcard generator helps you create personalized study materials from various sources, making learning more efficient and engaging.
           </p>
         </header>
 

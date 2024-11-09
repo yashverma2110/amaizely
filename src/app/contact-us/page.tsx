@@ -10,8 +10,8 @@ export default function ContactUs() {
           <div>
             <h2 className="text-xl font-semibold mb-2">Get in Touch</h2>
             <p className="text-gray-600">
-              Have questions about Amaizely? We'd love to hear from you. Send us a message
-              and we'll respond as soon as possible.
+              Have questions about Amaizely? We&apos;d love to hear from you. Send us a message
+              and we&apos;ll respond as soon as possible.
             </p>
           </div>
 
@@ -30,7 +30,8 @@ export default function ContactUs() {
             <address className="not-italic text-gray-600">
               Yashoda Nagar<br />
               Kanpur<br />
-              Uttar Pradesh, India
+              Uttar Pradesh<br />
+              India
             </address>
           </div>
         </div>
