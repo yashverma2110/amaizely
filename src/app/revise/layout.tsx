@@ -9,10 +9,6 @@ export default function DeckLayout({
 }>) {
   const cookieStore = cookies();
 
-  if (!cookieStore.get('sid')?.value) {
-    redirect('/login')
-  }
-
   return (
     <html lang="en">
       <body>

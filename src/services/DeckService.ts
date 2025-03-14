@@ -322,6 +322,31 @@ export async function GET_DECK_AND_DECK_CARDS_WITH_ID(deckId: string) {
   }
 }
 
+export async function GET_DECK_WITH_ID_TO_EDIT(deckId: string) {
+  try {
+    const response = await AxiosInstance.get(`/deck/${deckId}/edit`)
+
+    return {
+      success: true,
+      deck: response.data.deck,
+      flashcards: response.data.flashcards
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data.message
+      }
+    }
+
+    return {
+      success: false,
+      error,
+    }
+  }
+}
+
 
 export async function DELETE_DECK_WITH_ID(deckId: string) {
   try {

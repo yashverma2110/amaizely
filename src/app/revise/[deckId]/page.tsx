@@ -26,13 +26,12 @@ export default async function DeckRevisionPage({ params, searchParams }: { param
     return <div>{response.message}</div>
   }
 
-
   return (
-    <div className="deck-revision-page h-screen">
+    <div className="deck-revision-page min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Subtle grid overlay */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
 
-      <div className="relative h-screen">
+      <div className="relative min-h-screen">
         {/* Header */}
         <div className="absolute top-0 left-0 right-0 z-10 p-4">
           <div className="container mx-auto">
@@ -41,20 +40,29 @@ export default async function DeckRevisionPage({ params, searchParams }: { param
                 <h1 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-200">
                   {response.deck.title}
                 </h1>
+                <p className="text-sm text-gray-400 mt-1">
+                  {response.deck.description}
+                </p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Flashcard Container */}
-        <div className="h-screen">
+        <div className="min-h-screen">
           <FlashcardContainer flashcards={response.flashcards} />
         </div>
 
         {/* Public Actions */}
         {!authSid && (
-          <div className="absolute bottom-0 left-0 right-0 z-10 mb-16 md:mb-0">
-            <PublicDeckActions deckId={params.deckId} />
+          <div className="fixed bottom-0 left-0 right-0 z-10 p-4 pointer-events-none">
+            <div className="container mx-auto">
+              <div className="bg-slate-800/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl pointer-events-auto transform-gpu transition-all duration-300 hover:shadow-purple-500/10">
+                <div className="p-4">
+                  <PublicDeckActions deckId={params.deckId} />
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

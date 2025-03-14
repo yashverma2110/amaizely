@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { GET_DECK_AND_DECK_CARDS_WITH_ID, IFlashcard } from "@/services/DeckService";
+import { GET_DECK_WITH_ID_TO_EDIT, IFlashcard } from "@/services/DeckService";
 import DeckEditor from "@/components/DeckCreator/DeckEditor";
 import { IDeck } from "@/types/IDeck";
 
@@ -11,7 +11,7 @@ export default function EditDeckPage({ params }: { params: { deckId: string } })
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    GET_DECK_AND_DECK_CARDS_WITH_ID(params.deckId).then((response) => {
+    GET_DECK_WITH_ID_TO_EDIT(params.deckId).then((response) => {
       if (response.success) {
         setFlashcards(response.flashcards ?? []);
         setDeck(response.deck);
