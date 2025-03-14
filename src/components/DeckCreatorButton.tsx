@@ -41,26 +41,27 @@ export default function DeckCreatorButton() {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-4">
-        <div className="skeleton bg-gray-300 h-12 rounded w-full drop-shadow"></div>
+        <div className="skeleton h-12 w-full bg-slate-800/50 rounded-xl"></div>
         <div className="flex justify-between">
-          <div className="skeleton bg-gray-300 h-4 w-10 drop-shadow"></div>
-          <div className="skeleton bg-gray-300 h-4 w-24 drop-shadow"></div>
+          <div className="skeleton h-4 w-10 bg-slate-800/30"></div>
+          <div className="skeleton h-4 w-24 bg-slate-800/30"></div>
         </div>
-        <div className="skeleton bg-gray-300 h-4 w-full drop-shadow"></div>
       </div>
     )
   }
 
   return (
     <>
-      <button className="deck-creator-button btn btn-active btn-primary w-full" onClick={() => deckModal.current?.showModal()}>
-        <FontAwesomeIcon icon={faPlus} size="2x" className="h-4 w-4" />
-        Create Deck
+      <button 
+        className="btn relative overflow-hidden group bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 border-0 text-white hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-200 hover:-translate-y-0.5" 
+        onClick={() => deckModal.current?.showModal()}
+      >
+        <div className="absolute inset-0 bg-white/20 group-hover:bg-transparent transition-colors duration-200"></div>
+        <FontAwesomeIcon icon={faPlus} className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+        <span>Create Deck</span>
       </button>
 
-      {
-        totalDecks / decksAllocated > 0.4 && <DeckLimitIndicator current={totalDecks} total={decksAllocated} />
-      }
+      {totalDecks / decksAllocated > 0.4 && <DeckLimitIndicator current={totalDecks} total={decksAllocated} />}
 
       <dialog ref={deckModal} id="deck-creator-modal" className="modal modal-bottom sm:modal-middle">
         <DeckCreatorForm current={totalDecks} total={decksAllocated} onCancel={handleClose} />

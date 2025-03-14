@@ -1,4 +1,4 @@
-import { faBrain, faFilePdf, faLink, faPenAlt, faPlus, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faBrain, faFilePdf, faLink, faPenAlt, faPlus, faVideo, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import ProgressBar from "./ui/ProgressBar";
@@ -16,77 +16,101 @@ export default function DeckCreatorForm({ current, total, onCancel }: IDeckCreat
       label: "Website",
       description: "Use a website link to create flashcards",
       href: "/deck/create/website",
+      gradient: "from-blue-500 to-cyan-500"
     },
     {
       icon: faVideo,
       label: "Youtube",
       description: "Use a Youtube video link to create flashcards",
       href: "/deck/create/youtube",
+      gradient: "from-red-500 to-pink-500"
     },
     {
       icon: faPenAlt,
       label: "Text",
       description: "Use custom text to create flashcards",
       href: "/deck/create/text",
+      gradient: "from-purple-500 to-indigo-500"
     },
     {
       icon: faFilePdf,
       label: "PDF",
       description: "Use a PDF file to create flashcards",
       href: "/deck/create/pdf",
+      gradient: "from-orange-500 to-amber-500"
     },
   ]
 
-
   return (
-    <div className="modal-box">
+    <div className="modal-box bg-slate-900/95 backdrop-blur-lg border border-white/10 text-white">
       <form method="dialog">
-        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={onCancel}>✕</button>
+        <button 
+          className="btn btn-sm btn-circle absolute right-4 top-4 bg-white/10 border-0 text-white hover:bg-white/20" 
+          onClick={onCancel}
+        >
+          <FontAwesomeIcon icon={faXmark} className="h-4 w-4" />
+        </button>
       </form>
-      <h3 className="font-bold text-lg">Choose a mode to create</h3>  
-      <hr className="my-2 border-neutral-200" />
 
-      {
-        current / total > 0.5 && (
-          <div className="flex flex-col gap-1 mt-2">
-            <p className="text-xs">You have created <strong>{current}</strong> out of <strong>{total}</strong> decks</p>
-            <ProgressBar current={current} total={total} />
-          </div>
-        )
-      }
+      <h3 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
+        Create New Deck
+      </h3>
 
-      <h4 className="text-lg text-center p-4">AI-powered <FontAwesomeIcon icon={faBrain} className="h-4 w-4" /></h4>
-      <section className="ai-create-options grid grid-cols-2 gap-4">
-        {
-          AI_CREATE_OPTIONS.map((option) => (
-            <Link
-              href={option.href}
-              className="w-full border-b-4 border-neutral-200 drop-shadow flex flex-col items-center gap-2 bg-gradient-to-b from-neutral-200 to-neutral-50 hover:bg-gradient-to-b hover:from-neutral-50 hover:to-neutral-100 rounded-lg p-2"
-              key={option.label}
-              onClick={onCancel}
-            >
-              <div className="flex w-full items-center text-left gap-2">
-                <FontAwesomeIcon icon={option.icon} className="h-4 w-4" />
-                <span className="text-lg font-semibold">{option.label}</span>
+      {current / total > 0.5 && (
+        <div className="bg-slate-800/50 rounded-xl p-4 mb-6">
+          <p className="text-sm text-gray-300 mb-2">
+            You have created <strong className="text-white">{current}</strong> out of <strong className="text-white">{total}</strong> decks
+          </p>
+          <ProgressBar current={current} total={total} />
+        </div>
+      )}
+
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+          <FontAwesomeIcon icon={faBrain} className="h-4 w-4 text-white" />
+        </div>
+        <h4 className="text-lg font-semibold">AI-powered Creation</h4>
+      </div>
+
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        {AI_CREATE_OPTIONS.map((option) => (
+          <Link
+            href={option.href}
+            key={option.label}
+            onClick={onCancel}
+            className="group relative overflow-hidden"
+          >
+            <div className={`absolute inset-0 bg-gradient-to-br ${option.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-300 rounded-xl`}></div>
+            <div className="relative bg-slate-800/50 backdrop-blur-sm rounded-xl border border-white/10 p-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <FontAwesomeIcon icon={option.icon} className="h-4 w-4 text-gray-300 group-hover:scale-110 transition-transform duration-300" />
+                <h5 className="text-lg font-semibold">{option.label}</h5>
               </div>
-              <p className="text-sm">{option.description}</p>
-            </Link>
-          ))
-        }
+              <p className="text-sm text-gray-300">{option.description}</p>
+            </div>
+          </Link>
+        ))}
       </section>
 
-      <div className="divider">OR</div>
+      <div className="relative flex items-center gap-4 my-8">
+        <div className="flex-grow h-px bg-white/10"></div>
+        <span className="text-sm text-gray-400">or</span>
+        <div className="flex-grow h-px bg-white/10"></div>
+      </div>
 
       <Link
         href="/deck/create/manual"
-        className="w-full border-b-4 border-neutral-200 mt-4 flex flex-col items-center gap-2 drop-shadow bg-gradient-to-b from-neutral-200 to-neutral-50 hover:bg-gradient-to-b hover:from-neutral-50 hover:to-neutral-100 rounded-lg p-2"
         onClick={onCancel}
+        className="group relative overflow-hidden block"
       >
-        <div className="flex items-center gap-2">
-          <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
-          <span className="text-lg font-semibold">Create manually</span>
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-10 group-hover:opacity-20 transition-opacity duration-300 rounded-xl"></div>
+        <div className="relative bg-slate-800/50 backdrop-blur-sm rounded-xl border border-white/10 p-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
+          <div className="flex items-center gap-3 mb-2">
+            <FontAwesomeIcon icon={faPlus} className="h-4 w-4 text-gray-300 group-hover:scale-110 transition-transform duration-300" />
+            <h5 className="text-lg font-semibold">Create manually</h5>
+          </div>
+          <p className="text-sm text-gray-300">Create a deck with our flexible editor with formatting tools</p>
         </div>
-        <p className="text-sm">Create a deck with our flexible editor with formatting tools</p>
       </Link>
     </div>
   )

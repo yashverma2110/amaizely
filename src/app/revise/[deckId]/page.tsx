@@ -28,18 +28,36 @@ export default async function DeckRevisionPage({ params, searchParams }: { param
 
 
   return (
-    <div className="deck-revision-page h-[calc(100vh-8rem)] md:h-full grid grid-rows-12">
-      <div className="navbar-container row-span-1 md:p-2" >
-        <div className="h-full bg-base-100 flex items-center justify-center text-center drop-shadow md:rounded-lg">
-          <h1 className="text-xl font-semibold">{response.deck.title}</h1>
+    <div className="deck-revision-page h-screen">
+      {/* Subtle grid overlay */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
+
+      <div className="relative h-screen">
+        {/* Header */}
+        <div className="absolute top-0 left-0 right-0 z-10 p-4">
+          <div className="container mx-auto">
+            <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-white/10 shadow-xl">
+              <div className="px-6 py-4">
+                <h1 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-200">
+                  {response.deck.title}
+                </h1>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Flashcard Container */}
+        <div className="h-screen">
+          <FlashcardContainer flashcards={response.flashcards} />
+        </div>
+
+        {/* Public Actions */}
+        {!authSid && (
+          <div className="absolute bottom-0 left-0 right-0 z-10 mb-16 md:mb-0">
+            <PublicDeckActions deckId={params.deckId} />
+          </div>
+        )}
       </div>
-      <div className={authSid ? "row-span-11" : "row-span-10"}>
-        <FlashcardContainer flashcards={response.flashcards} />
-      </div>
-      {!authSid && <div className="row-span-1">
-        <PublicDeckActions deckId={params.deckId} />
-      </div>}
     </div>
   )
 }

@@ -7,4 +7,7 @@ export interface IDeck {
   createdBy: string;
   createdAt: Date;
   updatedAt: Date;
+  totalCards?: number;
+  lastStudied?: Date;
+  progress?: number;
 }
