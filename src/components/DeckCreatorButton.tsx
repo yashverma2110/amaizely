@@ -53,7 +53,7 @@ export default function DeckCreatorButton() {
   return (
     <>
       <button 
-        className="btn relative overflow-hidden group bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 border-0 text-white hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-200 hover:-translate-y-0.5" 
+        className="btn w-full relative overflow-hidden group bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 border-0 text-white hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-200 hover:-translate-y-0.5" 
         onClick={() => deckModal.current?.showModal()}
       >
         <div className="absolute inset-0 bg-white/20 group-hover:bg-transparent transition-colors duration-200"></div>
