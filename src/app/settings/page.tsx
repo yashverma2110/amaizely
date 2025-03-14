@@ -18,7 +18,7 @@ export default async function SettingsPage() {
 
   if (!response.success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 flex items-center justify-center">
+      <div className="min-h-screen p-4 flex items-center justify-center">
         <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-white/10 p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-2">Failed to load user</h2>
           <p className="text-gray-300">Please try refreshing the page</p>
@@ -29,7 +29,7 @@ export default async function SettingsPage() {
 
   if (!response.user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 flex items-center justify-center">
+      <div className="min-h-screen p-4 flex items-center justify-center">
         <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-white/10 p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-2">User not found</h2>
           <p className="text-gray-300">Please try logging in again</p>
@@ -39,7 +39,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <main className="min-h-screen">
       {/* Subtle grid overlay */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
 

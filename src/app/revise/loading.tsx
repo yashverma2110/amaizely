@@ -1,6 +1,6 @@
 export default function ReviseLoading() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <main className="min-h-screen">
       {/* Subtle grid overlay */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
 

@@ -19,7 +19,7 @@ export default async function RevisePage() {
 
   if (!response.success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 flex items-center justify-center">
+      <div className="min-h-screen p-4 flex items-center justify-center">
         <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-white/10 p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-2">Failed to load flashcards</h2>
           <p className="text-gray-300">Please try refreshing the page</p>
@@ -30,7 +30,7 @@ export default async function RevisePage() {
 
   if (response.flashcards.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
+      <div className="min-h-screen p-8">
         <div className="max-w-2xl mx-auto">
           <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-white/10 p-8 text-center">
             <div className="mb-6">
@@ -56,7 +56,7 @@ export default async function RevisePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen">
       {/* Subtle grid overlay */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
 
