@@ -35,9 +35,10 @@ module.exports = {
         priority: 0.8,
       },
       {
-        loc: '/help/flashcard-maker',
-        changefreq: 'monthly',
-        priority: 0.7,
+        loc: '/blog/flashcard-maker',
+        changefreq: 'daily',
+        priority: 0.9,
+        lastmod: new Date().toISOString()
       }
     ];
 

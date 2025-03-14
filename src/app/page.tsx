@@ -138,8 +138,7 @@ export default function Home() {
             <div>
               <h6 className="text-lg font-semibold mb-4">Resources</h6>
               <ul className="space-y-3">
-                <li><Link className="text-gray-400 hover:text-white transition-colors" href="/blog">Blog</Link></li>
-                <li><Link className="text-gray-400 hover:text-white transition-colors" href="/help">Help Center</Link></li>
+                <li><Link className="text-gray-400 hover:text-white transition-colors" href="/blog/flashcard-maker">Blog</Link></li>
               </ul>
             </div>
             
