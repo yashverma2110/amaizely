@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import useLocalPersistence from "@/app/hooks/useLocalPersistence";
 import SaveDeckForm from "@/components/SaveDeckForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faArrowUp, faFloppyDisk, faInfoCircle, faPlus, faTrash, faUnlock, faGripVertical } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowUp, faFloppyDisk, faInfoCircle, faPlus, faTrash, faUnlock, faGripVertical, faXmark } from "@fortawesome/free-solid-svg-icons";
 import RichTextEditor from "../RichTextEditor";
 import { removeHtmlTags } from "@/utils/StringUtils";
 import { IDeck } from "@/types/IDeck";
@@ -31,6 +31,7 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
   const cardRefs = useRef<HTMLDivElement[]>([]);
   const saveDeckModalRef = useRef<HTMLDialogElement>(null)
   const deckErrorModalRef = useRef<HTMLDialogElement>(null)
+  const discardModalRef = useRef<HTMLDialogElement>(null)
 
   const { persist: persistFlashcards, clear: clearFlashcards } = useLocalPersistence<IFlashcard[]>({ 
     initialValue: flashcardsFromProps, 
@@ -175,6 +176,39 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
     saveDeckModalRef.current?.showModal();
   }
 
+  function hasUnsavedChanges() {
+    if (mode === "create") {
+      return flashcards.length > 0;
+    }
+    
+    if (!flashcardsFromProps || !flashcards) return false;
+    
+    if (flashcardsFromProps.length !== flashcards.length) return true;
+    
+    return flashcards.some((card, index) => {
+      const originalCard = flashcardsFromProps[index];
+      return card.title !== originalCard.title || card.content !== originalCard.content;
+    });
+  }
+
+  function handleDiscard() {
+    if (hasUnsavedChanges()) {
+      discardModalRef.current?.showModal();
+    } else {
+      discardChanges();
+    }
+  }
+
+  function discardChanges() {
+    clearFlashcards();
+    if (mode === "edit") {
+      setFlashcards(flashcardsFromProps ?? []);
+    } else {
+      setFlashcards([]);
+    }
+    router.push('/deck');
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Subtle grid overlay */}
@@ -218,6 +252,14 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
           >
             <FontAwesomeIcon icon={faPlus} className="h-5 w-5" />
             <span className="font-semibold">Add Flashcard</span>
+          </button>
+
+          <button 
+            className="btn btn-md bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20"
+            onClick={handleDiscard}
+          >
+            <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
+            <span className="font-semibold">Discard Changes</span>
           </button>
 
           {shouldShowUpsell() && (
@@ -385,6 +427,30 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
             onSave={clearFlashcards}
             onCancel={() => saveDeckModalRef.current?.close()}
           />
+        </dialog>
+
+        <dialog id="discard-changes-modal" ref={discardModalRef} className="modal modal-bottom sm:modal-middle">
+          <div className="modal-box bg-slate-800/90 backdrop-blur-lg border border-white/10">
+            <h3 className="text-2xl font-bold text-white mb-4">Discard Changes?</h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to discard your changes? This action cannot be undone.
+            </p>
+            <div className="modal-action flex gap-2">
+              <form method="dialog" className="flex gap-2">
+                <button 
+                  className="btn bg-slate-700 hover:bg-slate-600 text-white border-0"
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="btn bg-red-500/20 hover:bg-red-500/30 text-red-400 hover:text-red-300 border border-red-500/20"
+                  onClick={discardChanges}
+                >
+                  Discard Changes
+                </button>
+              </form>
+            </div>
+          </div>
         </dialog>
 
         <AlertsManager alerts={alerts} />

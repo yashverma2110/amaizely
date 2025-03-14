@@ -7,9 +7,9 @@ export default function InAppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="in-app-layout min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 grid grid-cols-12 grid-rows-[auto_1fr_auto]">
+    <div className="in-app-layout min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 grid grid-cols-12 grid-rows-[auto_auto_auto]">
       {/* Header */}
-      <div className="col-span-12 sticky top-0 z-50 px-4 py-3">
+      <div className="col-span-12 sticky top-0 z-50 px-4 py-3 hidden md:block">
         <div className="container mx-auto">
           <div className="bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-white/10 shadow-xl">
             <AppHeader />
@@ -23,7 +23,7 @@ export default function InAppLayout({
       </main>
 
       {/* Bottom Navigation (Mobile) */}
-      <div className="col-span-12 md:hidden">
+      <div className="col-span-12 pt-10 md:hidden">
         <BottomNavigation />
       </div>
     </div>

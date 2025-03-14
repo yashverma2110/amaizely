@@ -25,6 +25,12 @@ const config: Config = {
         '2xl': '1536px',
         // => @media (min-width: 1536px) { ... }
       },
+      padding: {
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+      },
       boxShadow: {
         "shadow-top": "0px 0px 13px 3px",
       },
