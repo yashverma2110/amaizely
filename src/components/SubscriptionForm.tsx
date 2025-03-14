@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { COMPLETE_ORDER, CREATE_ORDER } from "@/services/PaymentService"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faCheckCircle, faInfoCircle, faMinus, faPlus, faSpinner, faUnlock } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faCheckCircle, faInfoCircle, faMinus, faPlus, faSpinner, faUnlock, faShieldHeart } from "@fortawesome/free-solid-svg-icons";
 import { MAX_DECKS, MIN_DECKS, PRICE_PER_DECK, AI_GENERATION_PER_DECK, DISCOUNT_PER_DECK, DECK_JUMPS, UPSELL_POINTS } from "@/config/SubscriptionConstants";
 import { GET_COUNTRY } from "@/services/AuthService";
 
@@ -184,71 +184,116 @@ export default function SubscriptionForm({ country, isLoggedIn }: { country?: st
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-8">
-        <ul>
-          {
-            getSortedUpsellPoints().map((point) => (
-              <li key={point.message} className={`flex items-center gap-2 ${searchParams.get('intent') === point.intent ? 'italic font-semibold text-yellow-500 text-base md:text-lg' : 'text-sm md:text-base'}`}>
-                <FontAwesomeIcon icon={faCheckCircle} className={`h-3 w-3 ${searchParams.get('intent') === point.intent ? '' : 'text-success'}`} />
-                {getMessage(point.message, point.intent)}
-              </li>
-            ))
-          }
-          <li className="flex text-sm md:text-base items-center gap-2"><FontAwesomeIcon icon={faCheckCircle} className="text-success h-3 w-3" /> Create or generate <strong>{totalDecks}</strong> more decks</li>
-          <li className="flex text-sm md:text-base items-center gap-2"><FontAwesomeIcon icon={faCheckCircle} className="text-success h-3 w-3" /> Access to more incoming AI features</li>
-        </ul>
+    <div className="flex flex-col gap-8">
+      {/* Features List */}
+      <ul className="space-y-4">
+        {getSortedUpsellPoints().map((point) => (
+          <li key={point.message} 
+              className={`flex items-center gap-3 ${
+                searchParams.get('intent') === point.intent 
+                ? 'text-yellow-400 font-medium text-base md:text-lg' 
+                : 'text-gray-300 text-sm md:text-base'
+              }`}>
+            <FontAwesomeIcon 
+              icon={faCheckCircle} 
+              className={`h-5 w-5 ${
+                searchParams.get('intent') === point.intent 
+                ? 'text-yellow-400' 
+                : 'text-green-400'
+              }`} 
+            />
+            {getMessage(point.message, point.intent)}
+          </li>
+        ))}
+        <li className="flex text-sm md:text-base items-center gap-3 text-gray-300">
+          <FontAwesomeIcon icon={faCheckCircle} className="text-green-400 h-5 w-5" />
+          Create or generate <strong className="text-white">{totalDecks}</strong> more decks
+        </li>
+        <li className="flex text-sm md:text-base items-center gap-3 text-gray-300">
+          <FontAwesomeIcon icon={faShieldHeart} className="text-green-400 h-5 w-5" />
+          Access to more incoming AI features
+        </li>
+      </ul>
 
-        <div className="flex flex-col items-center h-full">
-          <div className="flex justify-center items-center gap-2">
-            <button className="btn btn-xs btn-outline" disabled={totalDecks === MIN_DECKS} onClick={decrementDecks}>
-              <FontAwesomeIcon icon={faMinus} className="h-4 w-4" />
-            </button>
-            <span className="text-3xl md:text-5xl bg-neutral-200 rounded px-4">{totalDecks}</span>
-            <button className="btn btn-xs btn-outline" disabled={totalDecks === MAX_DECKS} onClick={incrementDecks}>
-              <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
-            </button>
+      {/* Deck Counter */}
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex items-center gap-4">
+          <button 
+            className="btn btn-circle btn-sm bg-slate-700/50 hover:bg-slate-600/50 border-white/10 text-white" 
+            disabled={totalDecks === MIN_DECKS} 
+            onClick={decrementDecks}
+          >
+            <FontAwesomeIcon icon={faMinus} className="h-4 w-4" />
+          </button>
+          <span className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-200">
+            {totalDecks}
+          </span>
+          <button 
+            className="btn btn-circle btn-sm bg-slate-700/50 hover:bg-slate-600/50 border-white/10 text-white" 
+            disabled={totalDecks === MAX_DECKS} 
+            onClick={incrementDecks}
+          >
+            <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
+          </button>
+        </div>
+        <p className="text-gray-400">Add or remove {DECK_JUMPS} decks</p>
+      </div>
+
+      {/* Price Display */}
+      <div className="bg-slate-700/30 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+        <div className="flex items-center justify-between">
+          <span className="text-gray-400 text-lg">Total Price:</span>
+          <div className="text-right">
+            <span className="text-2xl md:text-3xl font-light text-gray-400 line-through mr-3">
+              {getCurrencySymbol()}{(PRICE_PER_DECK[currency] * totalDecks).toFixed(2)}
+            </span>
+            <span className="text-2xl md:text-3xl font-bold text-white">
+              {getCurrencySymbol()}{getDiscountedPrice()}
+            </span>
           </div>
-          <h3 className="text-center mt-2 text-lg whitespace-nowrap">Add or remove {DECK_JUMPS} decks</h3>
         </div>
       </div>
 
-      <div className="border border-neutral-200 rounded p-2 text-2xl md:text-4xl">
-        <strong className="font-extralight">Pay:</strong> <span className="font-bold">{getCurrencySymbol()} <span className="line-through font-thin">{(PRICE_PER_DECK[currency] * totalDecks).toFixed(2)}</span> {getDiscountedPrice()}</span>
+      {/* Savings Info */}
+      <div className="flex flex-col gap-2">
+        {status !== 'error' && (
+          <p className="text-sm md:text-base text-green-400 flex items-center gap-2">
+            <FontAwesomeIcon icon={faCheckCircle} className="h-4 w-4" />
+            <span>
+              {status === 'success' ? 'Payment successful! You saved' : 'You will save'} 
+              <strong className="ml-1">
+                {getCurrencySymbol()}{(PRICE_PER_DECK[currency] * totalDecks - getDiscountedPrice()).toFixed(2)}
+              </strong>
+            </span>
+          </p>
+        )}
+        {(totalDecks === MIN_DECKS && ['init', 'error'].includes(status)) && (
+          <p className="text-sm text-red-400 flex items-center gap-2">
+            <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" />
+            <span>Minimum cart value is <strong>{MIN_DECKS}</strong></span>
+          </p>
+        )}
+        {totalDecks === MAX_DECKS && ['init', 'error'].includes(status) && (
+          <p className="text-sm text-red-400 flex items-center gap-2">
+            <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" />
+            <span>You can buy maximum <strong>{MAX_DECKS}</strong> decks at once</span>
+          </p>
+        )}
       </div>
 
-      <div className="flex flex-col gap-1">
-        {
-          status !== 'error' && (
-            <p className="text-sm md:text-base text-success flex items-center">
-              <FontAwesomeIcon icon={faCheckCircle} className="h-3 w-3 mr-1" />
-              <span className="mr-1">{status === 'success' ? 'Payment successful! You saved' : 'You will save'}</span> <strong>{getCurrencySymbol()} {(PRICE_PER_DECK[currency] * totalDecks - getDiscountedPrice()).toFixed(2)}</strong>
-            </p>
-          )
-        }
-        {
-          (totalDecks === MIN_DECKS && ['init', 'error'].includes(status)) && (
-            <p className="text-sm text-error flex">
-              <FontAwesomeIcon icon={faInfoCircle} className="h-3 w-3 mr-1 my-1" />
-              <span>Minimum cart value is <strong>{MIN_DECKS}</strong></span>
-            </p>
-          )
-        }
-        {
-          totalDecks === MAX_DECKS && ['init', 'error'].includes(status) && (
-            <p className="text-sm text-error flex">
-              <FontAwesomeIcon icon={faInfoCircle} className="h-3 w-3 mr-1 my-1" />
-              <span>You can buy maximum <strong>{MAX_DECKS}</strong> decks at once</span>
-            </p>
-          )
-        }
-      </div>
-
-      <button className="relative btn btn-warning w-full" onClick={handleSubscriptionIntent}>
-        {getButtonText()}
-        {status === 'loading' && <FontAwesomeIcon icon={faSpinner} className="h-5 w-5 animate-spin" />}
-        {status === 'init' && <FontAwesomeIcon icon={faUnlock} className="h-5 w-5" />}
-        {status === 'success' && <FontAwesomeIcon icon={faCheck} className="h-5 w-5" />}
+      {/* Action Button */}
+      <button 
+        className={`relative btn w-full h-14 text-lg font-medium ${
+          status === 'loading' || status === 'confirming'
+            ? 'bg-purple-600/50 hover:bg-purple-600/60'
+            : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500'
+        } text-white border-0`} 
+        onClick={handleSubscriptionIntent}
+      >
+        <span className="relative z-10">{getButtonText()}</span>
+        {status === 'loading' && <FontAwesomeIcon icon={faSpinner} className="absolute right-4 h-5 w-5 animate-spin" />}
+        {status === 'init' && <FontAwesomeIcon icon={faUnlock} className="absolute right-4 h-5 w-5" />}
+        {status === 'success' && <FontAwesomeIcon icon={faCheck} className="absolute right-4 h-5 w-5" />}
       </button>
     </div>
   )
