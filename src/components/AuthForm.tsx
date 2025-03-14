@@ -164,7 +164,55 @@ export function AuthForm({ type, className }: IAuthFormProps) {
   }
 
   if (isCountryLoading) {
-    return <div className="skeleton w-full h-96 rounded-xl bg-slate-700/50"></div>
+    return (
+      <div className="w-full space-y-6">
+        {/* Form Title Skeleton */}
+        <div className="h-7 w-24 bg-slate-700/50 rounded-lg animate-pulse"></div>
+
+        {/* Input Fields Skeleton */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <div className="h-4 w-20 bg-slate-700/30 rounded-md"></div>
+            <div className="h-12 bg-slate-700/50 rounded-xl"></div>
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 w-20 bg-slate-700/30 rounded-md"></div>
+            <div className="h-12 bg-slate-700/50 rounded-xl"></div>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div className="h-4 w-24 bg-slate-700/30 rounded-md"></div>
+          <div className="h-12 bg-slate-700/50 rounded-xl"></div>
+        </div>
+
+        <div className="space-y-2">
+          <div className="h-4 w-20 bg-slate-700/30 rounded-md"></div>
+          <div className="h-12 bg-slate-700/50 rounded-xl"></div>
+        </div>
+
+        {/* Button Skeleton */}
+        <div className="h-12 bg-gradient-to-r from-purple-600/40 to-blue-600/40 rounded-xl mt-6"></div>
+
+        {/* Divider Skeleton */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-white/10"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <div className="h-6 w-32 bg-slate-700/50 rounded-full"></div>
+          </div>
+        </div>
+
+        {/* Google Button Skeleton */}
+        <div className="h-12 bg-slate-200/50 rounded-xl"></div>
+
+        {/* Link Skeleton */}
+        <div className="mt-6 flex justify-center">
+          <div className="h-4 w-48 bg-slate-700/30 rounded-md"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
