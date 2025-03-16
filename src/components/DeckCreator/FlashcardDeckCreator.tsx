@@ -95,29 +95,42 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
   }
 
-  function getCardTitle() {
-    switch (variant) {
-      case 'youtube':
-        return 'Paste YouTube link'
-      case 'website':
-        return 'Paste Website link'
-      case 'text':
-        return 'Paste some text'
-      case 'pdf':
-        return 'Upload a PDF file'
-    }
-  }
-
   function getCardBody() {
     switch (variant) {
       case 'youtube':
-        return 'Create an awesome flashcard deck using a YouTube link'
+        return 'Our AI will analyze the video content and generate relevant flashcards from key concepts'
       case 'website':
-        return 'Create a flashcard deck from the content on a website'
+        return 'Simply paste a URL and our AI will extract important information to create flashcards'
       case 'text':
-        return 'Create a flashcard deck from your notes or any other text'
+        return 'Paste your text and our AI will identify key points to transform into effective flashcards'
       case 'pdf':
-        return 'Create a flashcard deck from a PDF file'
+        return 'Upload a PDF document and our AI will convert important concepts into organized flashcards'
+    }
+  }
+
+  function getPageTitle() {
+    switch (variant) {
+      case 'youtube':
+        return 'Create from YouTube'
+      case 'website':
+        return 'Create from Website'
+      case 'text':
+        return 'Create from Text'
+      case 'pdf':
+        return 'Create from PDF'
+    }
+  }
+
+  function getPageDescription() {
+    switch (variant) {
+      case 'youtube':
+        return 'Transform any YouTube video into an interactive flashcard deck. Perfect for learning from educational content, lectures, and tutorials.'
+      case 'website':
+        return 'Convert web articles and blog posts into a structured flashcard deck. Great for studying online resources and documentation.'
+      case 'text':
+        return 'Turn your notes, documents or any text content into an organized flashcard deck. Ideal for reviewing class notes or study materials.'
+      case 'pdf':
+        return 'Extract key concepts from PDF documents and create a comprehensive flashcard deck. Perfect for textbooks and academic papers.'
     }
   }
 
@@ -213,11 +226,11 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
             <FontAwesomeIcon icon={variant === 'pdf' ? faFilePdf : faWandMagicSparkles} className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-200">
-            Create from PDF
+            {getPageTitle()}
           </h1>
         </div>
         <p className="text-gray-300 text-lg">
-          Upload your PDF document and our AI will generate a personalized flashcard deck to help you learn the material effectively.
+          {getPageDescription()}
         </p>
       </div>
 
@@ -232,7 +245,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-white">AI-Powered Generation</h2>
-                <p className="text-sm text-gray-400">Our AI will analyze your PDF and create optimized flashcards</p>
+                <p className="text-sm text-gray-400">{getCardBody()}</p>
               </div>
             </div>
 
