@@ -50,13 +50,15 @@ export default function AppHeader() {
             <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
             <span>Purchase</span>
           </Link>
-          <Link 
-            href="/feedback" 
-            className={`nav-link ${pathname === '/feedback' ? 'active' : ''}`}
+          <a 
+            href="https://www.reddit.com/r/amaizely/submit/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link"
           >
             <FontAwesomeIcon icon={faComments} className="w-4 h-4" />
             <span>Feedback</span>
-          </Link>
+          </a>
           <div className="h-6 w-px bg-white/10"></div>
           <Link 
             href="/logout" 
