@@ -1,8 +1,9 @@
 import type { IDeck } from "@/types/IDeck";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faPencil, faBook, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faPencil, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import DeckDeletion from "./DeckDeletion";
+import ExportDeck from "./ExportDeck";
 
 export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: string }) {
   return (
@@ -46,12 +47,17 @@ export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: str
               </button>
             </Link>
             {!deck.isDraft && (
-              <Link href={`/revise/${deck._id}`} className="flex-1">
-                <button className="w-full btn btn-sm bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 transition-all duration-200 hover:shadow-lg group">
-                  <FontAwesomeIcon icon={faPlay} className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                  <span>Revise</span>
-                </button>
-              </Link>
+              <>
+                <div className="flex-1">
+                  <ExportDeck deck={deck} />
+                </div>
+                <Link href={`/revise/${deck._id}`} className="flex-1">
+                  <button className="w-full btn btn-sm bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 transition-all duration-200 hover:shadow-lg group">
+                    <FontAwesomeIcon icon={faPlay} className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                    <span>Revise</span>
+                  </button>
+                </Link>
+              </>
             )}
           </div>
         </div>

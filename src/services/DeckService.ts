@@ -1,5 +1,6 @@
 import AxiosInstance from "@/config/AxiosService";
 import { AxiosError } from "axios";
+import { IDeck } from "@/types/IDeck";
 
 export async function GET_MY_DECKS() {
   try {
@@ -394,4 +395,30 @@ export async function GET_TOTAL_DECKS() {
       error,
     }
   }
+}
+
+export function exportToAnki(deck: IDeck, flashcards: IFlashcard[]) {
+  // Create a CSV string in Anki format (front,back)
+  const csvContent = flashcards.map(card => {
+    // Escape quotes and commas in the content
+    const front = `"${card.title.replace(/"/g, '""')}"`;
+    const back = `"${card.content.replace(/"/g, '""')}"`;
+    return `${front},${back}`;
+  }).join('\n');
+
+  // Add header row
+  const csvWithHeader = `"Front","Back"\n${csvContent}`;
+
+  // Create a Blob with the CSV content
+  const blob = new Blob([csvWithHeader], { type: 'text/csv;charset=utf-8;' });
+  
+  // Create a download link
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${deck.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_anki.csv`;
+  
+  // Trigger download
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react"
-import { IFlashcard } from "@/services/DeckService";
+import { IFlashcard, exportToAnki } from "@/services/DeckService";
 import { useRouter } from "next/navigation";
 import useLocalPersistence from "@/app/hooks/useLocalPersistence";
 import SaveDeckForm from "@/components/SaveDeckForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faArrowUp, faFloppyDisk, faInfoCircle, faPlus, faTrash, faUnlock, faGripVertical, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowUp, faFloppyDisk, faInfoCircle, faPlus, faTrash, faUnlock, faGripVertical, faXmark, faFileExport } from "@fortawesome/free-solid-svg-icons";
 import RichTextEditor from "../RichTextEditor";
 import { removeHtmlTags } from "@/utils/StringUtils";
 import { IDeck } from "@/types/IDeck";
@@ -209,6 +209,18 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
     router.push('/deck');
   }
 
+  function handleExportToAnki() {
+    if (!deck || flashcards.length === 0) return;
+    
+    const validFlashcards = flashcardsToSave();
+    if (validFlashcards.length === 0) {
+      deckErrorModalRef.current?.showModal();
+      return;
+    }
+    
+    exportToAnki(deck, validFlashcards);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Subtle grid overlay */}
@@ -356,6 +368,16 @@ export default function DeckEditor({ deck, flashcards: flashcardsFromProps, mode
               <FontAwesomeIcon icon={faPlus} className="h-5 w-5" />
               <span className="font-semibold">Add Another Flashcard</span>
             </button>
+
+            {mode === "edit" && (
+              <button 
+                className="btn btn-md bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white border-0"
+                onClick={handleExportToAnki}
+              >
+                <FontAwesomeIcon icon={faFileExport} className="h-5 w-5" />
+                <span className="font-semibold">Export to Anki</span>
+              </button>
+            )}
 
             <button 
               className={`btn btn-md backdrop-blur-lg transition-all duration-300 ${
