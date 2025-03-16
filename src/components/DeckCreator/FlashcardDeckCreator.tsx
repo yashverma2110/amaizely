@@ -5,13 +5,13 @@ import { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFloppyDisk, faUnlock, faFilePdf, faRobot, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
-import { GET_USER } from "@/services/AuthService"
 import SaveDeckForm from "../SaveDeckForm"
 import AILoadingState from "../ui/AILoadingState"
 import FormErrorMessage from "../ui/FormErrorMessage"
-import { FREE_DECKS } from "@/config/SubscriptionConstants"
 import FlashcardDeckCreatorLoading from "../ui/FlashcardDeckCreatorLoading"
 import AlertsManager, { IAlert } from "../AlertsManager"
+import { useAuth } from "@/contexts/AuthContext"
+import { FREE_DECKS } from "@/config/SubscriptionConstants"
 
 interface IFlashcardCreatorProps {
   variant: 'youtube' | 'website' | 'text' | 'pdf';
@@ -22,37 +22,24 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
   const [flashcards, setFlashcards] = useState<IFlashcard[]>([])
   const [websiteLink, setWebsiteLink] = useState<string>("")
   const [youtubeLink, setYoutubeLink] = useState<string>("")
-  const [isPageLoading, setIsPageLoading] = useState(true)
   const [statusCode, setStatusCode] = useState<number>()
   const [isLoading, setIsLoading] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
-  const [totalDecks, setTotalDecks] = useState(3)
   const [alerts, setAlerts] = useState<IAlert[]>([])
 
+  const { isAuthenticated, isLoading: isAuthLoading, totalDecks } = useAuth();
   const saveDeckModalRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
-    GET_USER().then((response) => {
-      setIsPageLoading(false)
-      if (response.success) {
-        setTotalDecks(response.user?.totalDecks || 3)
-        setIsAuthenticated(true)
-      }
-    }).catch(() => {
-      setIsPageLoading(false)
-    })
-
-    window.addEventListener('paste', (event) => {
+    const handlePaste = (event: ClipboardEvent) => {
       if (variant === 'website' || variant === 'text' || variant === 'pdf') {
         setClipboardContent(event.clipboardData?.getData('text') || "")
       }
-    })
+    };
 
-    return () => {
-      window.removeEventListener('paste', () => { })
-    }
-  }, [])
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, [variant]);
 
   async function handlePaste() {
     try {
@@ -213,7 +200,7 @@ export default function FlashcardDeckCreator({ variant }: IFlashcardCreatorProps
     }
   }
 
-  if (isPageLoading) {
+  if (isAuthLoading) {
     return <FlashcardDeckCreatorLoading />
   }
 
