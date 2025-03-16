@@ -14,7 +14,7 @@ export default function AppHeader() {
     <div className="px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Logo and Brand */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/deck" className="flex items-center gap-3 group">
           <Image 
             src="https://res.cloudinary.com/dd2ntmm1w/image/upload/v1731002279/logo_s5wgbq.png" 
             alt="am(AI)zely" 

@@ -193,12 +193,56 @@ export default function FlashcardForm({ defaultValue, variant, onSubmit, onPaste
   function getInput() {
     if (variant === 'pdf') {
       return (
-        <input
-          type="file"
-          name="pdf-field"
-          accept=".pdf"
-          className="file-input file-input-neutral file-input-bordered w-full"
-        />
+        <div className="space-y-6">
+          {/* File Upload Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-medium text-gray-300">
+                Upload PDF
+              </label>
+              <span className="text-xs text-gray-400">Max size: 2MB</span>
+            </div>
+            <div className="relative group">
+              <input
+                type="file"
+                name="pdf-field"
+                accept=".pdf"
+                className="w-full bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3
+                  text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
+                  file:bg-white/10 file:text-white hover:file:bg-white/20
+                  transition-all duration-300 hover:bg-slate-900/70
+                  focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
+              />
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/0 via-purple-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+            </div>
+          </div>
+
+          {/* Card Count Slider */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-medium text-gray-300">
+                Number of Cards
+              </label>
+              <span className="text-sm font-medium text-white bg-white/10 px-2 py-1 rounded-lg">
+                {flashcardCount} cards
+              </span>
+            </div>
+            <div className="relative">
+              <input
+                type="range"
+                min={MIN_FLASHCARDS_PER_DECK}
+                max={hasSubscription ? MAX_FLASHCARDS_PER_DECK : FREE_FLASHCARDS_PER_DECK}
+                value={flashcardCount}
+                onChange={(e) => setFlashcardCount(parseInt(e.target.value))}
+                className="range range-md w-full"
+              />
+              <div className="absolute -bottom-6 left-0 right-0 font-bold flex justify-between px-1 py-2 text-gray-400">
+                <span>{MIN_FLASHCARDS_PER_DECK}</span>
+                <span>{hasSubscription ? MAX_FLASHCARDS_PER_DECK : FREE_FLASHCARDS_PER_DECK}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
 
@@ -238,37 +282,33 @@ export default function FlashcardForm({ defaultValue, variant, onSubmit, onPaste
   }
 
   return (
-    <form className="youtube-actions w-full flex flex-col gap-2" onSubmit={handleSubmit}>
-      <div className="flex flex-col w-full">
-        {getInput()}
-        <div className="mt-2">
-          {errorMessage && <FormErrorMessage message={errorMessage} size="sm" align="left" />}
-        </div>
-
-        <hr className="my-2 border-neutral-200" />
-
-        <div className="flex flex-col gap-1">
-          <p className="text-sm md:text-base">Generate <strong>{flashcardCount}</strong> flashcards</p>
-          <div className="flex items-center gap-2">
-            <span className="md:text-lg">{MIN_FLASHCARDS_PER_DECK}</span>
-            <input
-              type="range"
-              min={MIN_FLASHCARDS_PER_DECK}
-              max={MAX_FLASHCARDS_PER_DECK}
-              value={flashcardCount}
-              className={`range ${shouldShowUpsell() ? 'range-warning' : ''} range-xs md:range-sm`}
-              onChange={(e) => setFlashcardCount(parseInt(e.target.value))}
-            />
-            <span className="md:text-lg">{MAX_FLASHCARDS_PER_DECK}</span>
-          </div>
-        </div>
-      </div>
-      <button className={`btn md:mt-8 ${shouldShowUpsell() ? 'btn-warning' : 'btn-primary'}`} type="submit">
-        {getButtonText()}
-        {
-          shouldShowUpsell() && <FontAwesomeIcon icon={faUnlock} className="h-4 w-4" />
-        }
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {getInput()}
+      
+      <button
+        type="submit"
+        disabled={isLoading}
+        className={clsx(
+          "btn w-full transition-all duration-300 group",
+          {
+            'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30': shouldShowUpsell(),
+            'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30': !shouldShowUpsell(),
+            'opacity-70 cursor-not-allowed': isLoading
+          }
+        )}
+      >
+        <FontAwesomeIcon 
+          icon={shouldShowUpsell() ? faUnlock : faPaste} 
+          className={`h-5 w-5 transition-transform duration-300 ${shouldShowUpsell() ? 'group-hover:rotate-12' : 'group-hover:scale-110'}`}
+        />
+        <span className="font-semibold">{getButtonText()}</span>
       </button>
+
+      {errorMessage && (
+        <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-xl p-4">
+          <p className="text-red-400">{errorMessage}</p>
+        </div>
+      )}
     </form>
   )
 }
