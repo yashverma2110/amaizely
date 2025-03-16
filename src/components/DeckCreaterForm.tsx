@@ -78,7 +78,7 @@ export default function DeckCreatorForm({ current, total, onCancel }: IDeckCreat
             href={option.href}
             key={option.label}
             onClick={onCancel}
-            className="group relative overflow-hidden"
+            className="group p-1 relative overflow-hidden"
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${option.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-300 rounded-xl`}></div>
             <div className="relative bg-slate-800/50 backdrop-blur-sm rounded-xl border border-white/10 p-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
@@ -101,7 +101,7 @@ export default function DeckCreatorForm({ current, total, onCancel }: IDeckCreat
       <Link
         href="/deck/create/manual"
         onClick={onCancel}
-        className="group relative overflow-hidden block"
+        className="group relative p-1 overflow-hidden block"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-10 group-hover:opacity-20 transition-opacity duration-300 rounded-xl"></div>
         <div className="relative bg-slate-800/50 backdrop-blur-sm rounded-xl border border-white/10 p-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
