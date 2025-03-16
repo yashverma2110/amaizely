@@ -19,7 +19,14 @@ export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: str
             <h2 className="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-200 transition-all duration-300">
               {deck.title}
             </h2>
-            <DeckDeletion deckId={deck._id} deckName={deck.title} />
+            <div className="flex items-center gap-2">
+              <Link href={`/deck/edit/${deck._id}`}>
+                <button className="btn btn-sm bg-white/5 hover:bg-white/10 text-white border border-white/10 backdrop-blur-lg transition-all duration-200 hover:shadow-lg group">
+                  <FontAwesomeIcon icon={faPencil} className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                </button>
+              </Link>
+              <DeckDeletion deckId={deck._id} deckName={deck.title} />
+            </div>
           </div>
           
           {/* Metadata */}
@@ -39,19 +46,13 @@ export default function DeckCard({ bgClass, deck }: { deck: IDeck, bgClass?: str
           </p>
 
           {/* Action buttons */}
-          <div className="flex gap-3 mt-auto">
-            <Link href={`/deck/edit/${deck._id}`} className="flex-1">
-              <button className="w-full btn btn-sm bg-white/5 hover:bg-white/10 text-white border border-white/10 backdrop-blur-lg transition-all duration-200 hover:shadow-lg group">
-                <FontAwesomeIcon icon={faPencil} className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                <span>Edit</span>
-              </button>
-            </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-auto">
             {!deck.isDraft && (
               <>
-                <div className="flex-1">
+                <div className="col-span-1">
                   <ExportDeck deck={deck} />
                 </div>
-                <Link href={`/revise/${deck._id}`} className="flex-1">
+                <Link href={`/revise/${deck._id}`} className="col-span-1">
                   <button className="w-full btn btn-sm bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 transition-all duration-200 hover:shadow-lg group">
                     <FontAwesomeIcon icon={faPlay} className="h-4 w-4 group-hover:scale-110 transition-transform" />
                     <span>Revise</span>
