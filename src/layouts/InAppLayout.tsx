@@ -7,7 +7,7 @@ export default function InAppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="in-app-layout min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 grid grid-cols-12 grid-rows-[auto_auto_auto]">
+    <div className="in-app-layout min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 grid grid-cols-12 grid-rows-12">
       {/* Header */}
       <div className="col-span-12 sticky top-0 z-50 px-4 py-3 hidden md:block">
         <div className="container mx-auto">

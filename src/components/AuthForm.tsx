@@ -371,7 +371,13 @@ export function AuthForm({ type, className }: IAuthFormProps) {
         className="w-full py-3 px-4 bg-white hover:bg-gray-50 text-gray-900 font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-3"
       >
         <GoogleIcon size="xs" />
-        <span>Sign up with Google</span>
+        {
+          type === 'login' ? (
+            <span>Log in with Google</span>
+          ) : (
+            <span>Sign up with Google</span>
+          )
+        }
       </button>
 
       <div className="mt-6 text-center">
